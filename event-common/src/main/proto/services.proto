@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package lnc.dev.grpc;
+import "event.proto";
+
+option java_multiple_files = true;
+option java_package = "lnc.dev.grpc";
+
+service EventService {
+  rpc streamEvents(EventRequest) returns (stream ln.dev.protos.Event) {}
+}
+
+message EventRequest {
+  optional ln.dev.protos.EventStreamFilters filters = 1;
+}

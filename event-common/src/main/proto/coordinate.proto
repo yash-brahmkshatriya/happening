@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package ln.dev.protos;
+
+option java_multiple_files = true;
+option java_package = "ln.dev.protos.coordinate";
+option java_outer_classname = "CoordinateProto";
+
+message Coordinate {
+  double latitude = 1;
+  double longitude = 2;
+}
