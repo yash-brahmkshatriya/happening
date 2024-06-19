@@ -12,9 +12,25 @@
     <artifactId>event-service</artifactId>
 
     <properties>
+        <event-common.version>1.0-SNAPSHOT</event-common.version>
+
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>ln.dev</groupId>
+            <artifactId>event-common</artifactId>
+            <version>${event-common.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.devh</groupId>
+            <artifactId>grpc-server-spring-boot-starter</artifactId>
+            <version>3.1.0.RELEASE</version>
+        </dependency>
+
+    </dependencies>
 </project>

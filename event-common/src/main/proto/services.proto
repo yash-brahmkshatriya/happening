@@ -1,13 +1,20 @@
 syntax = "proto3";
 
-package lnc.dev.grpc;
+package ln.dev.grpc;
 import "event.proto";
+import "common.proto";
 
 option java_multiple_files = true;
-option java_package = "lnc.dev.grpc";
+option java_package = "ln.dev.grpc";
 
 service EventService {
-  rpc streamEvents(EventRequest) returns (stream ln.dev.protos.Event) {}
+  rpc StreamEvents (EventRequest) returns (stream ln.dev.protos.Event) { }
+  rpc Heartbeat (ln.dev.protos.Empty) returns (HeartbeatResponse) {}
+}
+
+message HeartbeatResponse {
+  string message = 1;
+  string timestamp = 2;
 }
 
 message EventRequest {
