@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package ln.dev.protos;
+
+option java_multiple_files = false;
+option java_package = "ln.dev.protos.common";
+
+message Empty {}
