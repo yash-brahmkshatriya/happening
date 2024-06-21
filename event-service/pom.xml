@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>ln.dev</groupId>
-        <artifactId>live-event-stream</artifactId>
+        <artifactId>happening</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
