@@ -8,14 +8,15 @@ option java_package = "ln.dev.protos.event";
 option java_outer_classname = "EventProto";
 
 enum EventType {
-  ENTERTAINMENT = 0;
-  HEALTH = 1;
-  EDUCATION = 2;
-  FOOD = 3;
-  POLITIC = 4;
-  UNFORTUNATE = 5;
-  BUSINESS = 6;
-  FESTIVAL = 7;
+  UNKNOWN = 0;
+  ENTERTAINMENT = 1;
+  HEALTH = 2;
+  EDUCATION = 3;
+  FOOD = 4;
+  POLITIC = 5;
+  UNFORTUNATE = 6;
+  BUSINESS = 7;
+  FESTIVAL = 8;
 }
 
 enum TimestampFilterOperator {

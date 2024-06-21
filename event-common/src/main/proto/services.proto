@@ -8,7 +8,8 @@ option java_multiple_files = true;
 option java_package = "ln.dev.grpc";
 
 service EventService {
-  rpc StreamEvents (EventRequest) returns (stream ln.dev.protos.Event) { }
+  // Streams all currently active streams based on filters
+  rpc ActiveEvents (EventRequest) returns (stream ln.dev.protos.Event) { }
   rpc Heartbeat (ln.dev.protos.Empty) returns (HeartbeatResponse) {}
 }
 

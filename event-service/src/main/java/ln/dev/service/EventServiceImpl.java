@@ -14,8 +14,11 @@ import java.util.Date;
 @GrpcService
 public class EventServiceImpl extends EventServiceGrpc.EventServiceImplBase {
     @Override
-    public void streamEvents(EventRequest request, StreamObserver<Event> responseObserver) {
-
+    public void activeEvents(EventRequest request, StreamObserver<Event> responseObserver) {
+        responseObserver.onNext(Event.newBuilder()
+                        .setName("Work in progress")
+                .build());
+        responseObserver.onCompleted();
     }
 
     @Override
