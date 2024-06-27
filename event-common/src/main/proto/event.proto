@@ -25,11 +25,12 @@ enum TimestampFilterOperator {
 }
 
 message Event {
-  string name = 1;
-  EventType type = 2;
-  string description = 3;
-  string timestamp = 4;
-  Coordinate location = 5;
+  string _id = 1;
+  string name = 2;
+  EventType type = 3;
+  string description = 4;
+  string timestamp = 5;
+  Coordinate location = 6;
 }
 
 
