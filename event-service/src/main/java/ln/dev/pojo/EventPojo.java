@@ -3,6 +3,7 @@ package ln.dev.pojo;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import ln.dev.protos.event.EventType;
 
 import java.util.Date;
 
@@ -19,7 +20,9 @@ public class EventPojo {
 
     private String description;
 
-    private Date timestamp;
+    private Date startTimestamp;
+
+    private Date endTimestamp;
 
     private Location location;
     
