@@ -29,8 +29,9 @@ message Event {
   string name = 2;
   EventType type = 3;
   string description = 4;
-  string timestamp = 5;
-  Coordinate location = 6;
+  string startTimestamp = 5;
+  string endTimestamp = 6;
+  Coordinate location = 7;
 }
 
 
