@@ -18,7 +18,7 @@ import java.util.List;
 @Component
 public class EventConvertor {
 
-    final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     public Location convert(@NotNull Coordinate coordinates) {
         return Location.builder()

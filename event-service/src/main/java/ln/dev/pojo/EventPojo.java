@@ -4,11 +4,13 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import ln.dev.protos.event.EventType;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 @Data
 @Builder
+@Document(collection = "events")
 public class EventPojo {
 
     @Id
@@ -25,5 +27,7 @@ public class EventPojo {
     private Date endTimestamp;
 
     private Location location;
+
+    private Date createdAt;
     
 }
