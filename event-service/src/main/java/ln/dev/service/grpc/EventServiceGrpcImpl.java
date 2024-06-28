@@ -1,5 +1,6 @@
 package ln.dev.service.grpc;
 
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import ln.dev.grpc.EventRequest;
 import ln.dev.grpc.EventServiceGrpc;
@@ -44,7 +45,9 @@ public class EventServiceGrpcImpl extends EventServiceGrpc.EventServiceImplBase 
             responseObserver.onNext(eventConvertor.convert(eventPojo));
             responseObserver.onCompleted();
         } catch (ParseException e) {
-            responseObserver.onError(e);
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription(e.getMessage()).asRuntimeException());
+        } catch (Exception e) {
+            responseObserver.onError(Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException());
         }
     }
 
