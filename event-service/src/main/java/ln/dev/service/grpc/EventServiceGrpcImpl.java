@@ -30,9 +30,10 @@ public class EventServiceGrpcImpl extends EventServiceGrpc.EventServiceImplBase 
 
     @Override
     public void activeEvents(EventRequest request, StreamObserver<Event> responseObserver) {
-        responseObserver.onNext(Event.newBuilder()
-                        .setName("Work in progress")
-                .build());
+        eventService.findByFilters(request.getFilters())
+                        .stream().map(eventConvertor::convert)
+                        .forEach(responseObserver::onNext);
+
         responseObserver.onCompleted();
     }
 

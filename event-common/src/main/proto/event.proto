@@ -22,6 +22,7 @@ enum EventType {
 enum TimestampFilterOperator {
   BEFORE = 0;
   AFTER = 1;
+  BETWEEN = 2;
 }
 
 message Event {
@@ -42,4 +43,5 @@ message EventStreamFilters {
   TimestampFilterOperator timestampFilterOperator = 4;
   Coordinate location = 5;
   double locationRadius = 6;
+  string timestamp2 = 7;
 }
