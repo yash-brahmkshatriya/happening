@@ -17,10 +17,8 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    // TODO: MongoListener for setting auto fields
     public EventPojo createEvent(EventPojo eventPojo) {
         eventPojo.setId(null);
-        eventPojo.setCreatedAt(new Date());
         return eventRepository.save(eventPojo);
     }
 

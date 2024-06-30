@@ -1,11 +1,9 @@
 package ln.dev.pojo;
 
 import ln.dev.constants.MongoFieldNames;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ln.dev.protos.event.EventType;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
@@ -14,11 +12,12 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import java.util.Date;
 
 @Data
-@Builder
+@SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Document(collection = "events")
-public class EventPojo {
+public class EventPojo extends BasePojo {
 
     @MongoId(FieldType.OBJECT_ID)
     private String id;
@@ -40,8 +39,5 @@ public class EventPojo {
 
     @Field(MongoFieldNames.Event.LOCATION)
     private Location location;
-
-    @Field(MongoFieldNames.Event.CREATED_AT)
-    private Date createdAt;
     
 }
