@@ -41,7 +41,9 @@ public class CustomEventRepositoryImpl implements CustomEventRepository {
                             .regex(Pattern.compile(eventStreamFilters.getName(), Pattern.CASE_INSENSITIVE))
             );
         }
-        return new Criteria().andOperator(criterias);
+        Criteria filterCriteria = new Criteria();
+        if(!criterias.isEmpty()) filterCriteria.andOperator(criterias);
+        return filterCriteria;
     }
 
     @Override
