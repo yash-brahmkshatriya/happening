@@ -1,6 +1,5 @@
 package ln.dev.service;
 
-import ln.dev.grpc.EventRequest;
 import ln.dev.pojo.EventPojo;
 import ln.dev.protos.event.EventStreamFilters;
 import ln.dev.repository.EventRepository;
@@ -18,12 +17,14 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
+    // TODO: MongoListener for setting auto fields
     public EventPojo createEvent(EventPojo eventPojo) {
         eventPojo.setId(null);
         eventPojo.setCreatedAt(new Date());
         return eventRepository.save(eventPojo);
     }
 
+    // TODO: Validate Payload eventStreamFilters
     public List<EventPojo> findByFilters(EventStreamFilters eventStreamFilters) {
         return eventRepository.findByEventFilters(eventStreamFilters);
     }
