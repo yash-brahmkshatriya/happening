@@ -24,6 +24,15 @@ public class MongoFieldNames {
 
         public static final String COORDINATES = "coordinates";
 
+        public static class Subscription {
+
+            public static final String SUBSCRIPTION_ID = "subscriptionId";
+
+            public static final String IS_ACTIVE = "isActive";
+
+            public static final String ACTIVE_FROM_TIMESTAMP = "activeFrom";
+        }
+
 
     }
 }
