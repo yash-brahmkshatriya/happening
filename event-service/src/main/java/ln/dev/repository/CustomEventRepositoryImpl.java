@@ -4,6 +4,7 @@ package ln.dev.repository;
 import ln.dev.constants.MongoFieldNames;
 import ln.dev.pojo.EventPojo;
 import ln.dev.protos.event.EventStreamFilters;
+import ln.dev.protos.event.ProximityFilter;
 import org.springframework.data.geo.GeoResult;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
@@ -48,13 +49,14 @@ public class CustomEventRepositoryImpl implements CustomEventRepository {
 
     @Override
     public List<EventPojo> findByEventFilters(EventStreamFilters eventFilters) {
+        ProximityFilter proximityFilter = eventFilters.getProximityFilter();
 
         Point locationPoint = new Point(
-                eventFilters.getLocation().getLongitude(),
-                eventFilters.getLocation().getLatitude()
+                proximityFilter.getLocation().getLongitude(),
+                proximityFilter.getLocation().getLatitude()
         );
         NearQuery nearQuery = NearQuery.near(locationPoint).maxDistance(
-                eventFilters.getLocationRadius(),
+                proximityFilter.getLocationRadius(),
                 Metrics.KILOMETERS
         ).spherical(true).query(new Query(eventFilterCriteriaBuilder(eventFilters)));
 
