@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,6 +20,10 @@ import java.util.List;
 public class EventConvertor {
 
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+    public Date parseISODate(String isoDate) throws ParseException {
+        return simpleDateFormat.parse(isoDate);
+    }
 
     public Location convert(@NotNull Coordinate coordinates) {
         return Location.builder()
@@ -57,8 +62,8 @@ public class EventConvertor {
                 .name(event.getName())
                 .type(event.getType())
                 .description(event.getDescription())
-                .startTimestamp(simpleDateFormat.parse(event.getStartTimestamp()))
-                .endTimestamp(simpleDateFormat.parse(event.getEndTimestamp()))
+                .startTimestamp(parseISODate(event.getStartTimestamp()))
+                .endTimestamp(parseISODate(event.getEndTimestamp()))
                 .location(convert(event.getLocation()))
                 .build();
     }

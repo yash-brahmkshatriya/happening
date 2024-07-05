@@ -19,6 +19,11 @@ enum EventType {
   FESTIVAL = 8;
 }
 
+enum TimestampFilterKey {
+  START = 0;
+  END = 1;
+}
+
 enum TimestampFilterOperator {
   BEFORE = 0;
   AFTER = 1;
@@ -37,13 +42,18 @@ message Event {
 
 
 message EventStreamFilters {
-  reserved 5, 6;
+  reserved 3,4,5,6,7;
   repeated EventType type = 1;
   string name = 2;
-  string timestamp = 3;
-  TimestampFilterOperator timestampFilterOperator = 4;
-  string timestamp2 = 7;
   ProximityFilter proximityFilter = 8;
+  TimestampFilter timestampFilter = 9;
+}
+
+message TimestampFilter {
+  TimestampFilterKey timestampFilterKey = 1;
+  string timestamp = 2;
+  TimestampFilterOperator timestampFilterOperator = 3;
+  string timestamp2 = 4;
 }
 
 message ProximityFilter {

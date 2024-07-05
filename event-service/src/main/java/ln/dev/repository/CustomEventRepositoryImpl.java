@@ -28,11 +28,14 @@ public class CustomEventRepositoryImpl implements CustomEventRepository {
     public List<EventPojo> findByEventFilters(EventStreamFilters eventFilters) {
         NearQuery nearQuery = eventCriteriaBuilder
                 .buildNearQuery(eventFilters.getProximityFilter())
-                .query(new Query(
-                        eventCriteriaBuilder.eventFilterCriteriaBuilder(eventFilters))
+                .query(
+                        new Query(eventCriteriaBuilder.buildFilterCriterias(eventFilters))
                 );
 
-        return mongoTemplate.geoNear(nearQuery, EventPojo.class).getContent()
-                .stream().map(GeoResult::getContent).toList();
+        return mongoTemplate.geoNear(nearQuery, EventPojo.class)
+                .getContent()
+                .stream()
+                .map(GeoResult::getContent)
+                .toList();
     }
 }
