@@ -21,17 +21,14 @@ public class EventServiceGrpcImpl extends EventServiceGrpc.EventServiceImplBase 
 
     private final EventService eventService;
 
-    private final EventConvertor eventConvertor;
-
-    public EventServiceGrpcImpl(EventService eventService, EventConvertor eventConvertor) {
+    public EventServiceGrpcImpl(EventService eventService) {
         this.eventService = eventService;
-        this.eventConvertor = eventConvertor;
     }
 
     @Override
     public void activeEvents(EventRequest request, StreamObserver<Event> responseObserver) {
         eventService.findByFilters(request.getFilters())
-                        .stream().map(eventConvertor::convert)
+                        .stream().map(EventConvertor::convert)
                         .forEach(responseObserver::onNext);
 
         responseObserver.onCompleted();
@@ -41,9 +38,9 @@ public class EventServiceGrpcImpl extends EventServiceGrpc.EventServiceImplBase 
     public void addEvent(Event request, StreamObserver<Event> responseObserver) {
         try {
             EventPojo eventPojo = eventService.createEvent(
-                    eventConvertor.convert(request)
+                    EventConvertor.convert(request)
             );
-            responseObserver.onNext(eventConvertor.convert(eventPojo));
+            responseObserver.onNext(EventConvertor.convert(eventPojo));
             responseObserver.onCompleted();
         } catch (ParseException e) {
             responseObserver.onError(Status.INVALID_ARGUMENT.withDescription(e.getMessage()).asRuntimeException());
