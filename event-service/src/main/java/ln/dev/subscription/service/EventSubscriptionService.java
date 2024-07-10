@@ -8,9 +8,7 @@ import ln.dev.subscription.model.EventSubscription;
 import ln.dev.util.IdGenerator;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class EventSubscriptionService implements SubscriptionService<EventPojo, Event, EventStreamFilters> {
@@ -19,6 +17,11 @@ public class EventSubscriptionService implements SubscriptionService<EventPojo, 
 
     public EventSubscriptionService() {
         this.subscribers = new HashMap<>();
+    }
+
+    // TODO: only for testing purposes, Remove later
+    public List<String> getSubscribers() {
+        return this.subscribers.keySet().stream().toList();
     }
 
     @Override
@@ -33,6 +36,16 @@ public class EventSubscriptionService implements SubscriptionService<EventPojo, 
         );
         this.subscribers.put(subscriberId, subscriber);
         return subscriber;
+    }
+
+    @Override
+    public void publish(Event event, List<String> subscriberIds) {
+        subscriberIds.stream()
+                .map(subscriptionId -> subscribers.getOrDefault(subscriptionId, null))
+                .filter(Objects::nonNull)
+                .map(EventSubscription::getResponseObserver)
+                .filter(Objects::nonNull)
+                .forEach(streamObserver -> streamObserver.onNext(event));
     }
 
     @Override

@@ -18,12 +18,6 @@ import java.util.regex.Pattern;
 @Component
 public class EventCriteriaBuilder {
 
-    private final EventConvertor eventConvertor;
-
-    public EventCriteriaBuilder(EventConvertor eventConvertor) {
-        this.eventConvertor = eventConvertor;
-    }
-
     private Optional<Criteria> timestampFilterCriteria(TimestampFilter timestampFilter) throws ParseException {
         String timestampFilterKey = timestampFilter.getTimestampFilterKey()
                 .equals(TimestampFilterKey.START) ? MongoFieldNames.Event.START_TIMESTAMP : MongoFieldNames.Event.END_TIMESTAMP;
@@ -31,13 +25,13 @@ public class EventCriteriaBuilder {
 
         switch (timestampFilter.getTimestampFilterOperator()) {
             case AFTER ->
-                timestampCriteria.gt(eventConvertor.parseISODate(timestampFilter.getTimestamp()));
+                timestampCriteria.gt(EventConvertor.parseISODate(timestampFilter.getTimestamp()));
 
             case BEFORE ->
-                timestampCriteria.lt(eventConvertor.parseISODate(timestampFilter.getTimestamp()));
+                timestampCriteria.lt(EventConvertor.parseISODate(timestampFilter.getTimestamp()));
 
-            case BETWEEN -> timestampCriteria.gt(eventConvertor.parseISODate(timestampFilter.getTimestamp()))
-                    .lt(eventConvertor.parseISODate(timestampFilter.getTimestamp2()));
+            case BETWEEN -> timestampCriteria.gt(EventConvertor.parseISODate(timestampFilter.getTimestamp()))
+                    .lt(EventConvertor.parseISODate(timestampFilter.getTimestamp2()));
             case UNRECOGNIZED -> {
                 return Optional.empty();
             }
