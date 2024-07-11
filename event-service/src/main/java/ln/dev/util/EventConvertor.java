@@ -4,23 +4,33 @@ import ln.dev.pojo.EventPojo;
 import ln.dev.pojo.Location;
 import ln.dev.protos.coordinate.Coordinate;
 import ln.dev.protos.event.Event;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
  *
  * Used to interconvert between classes used by grpc and POJOs stored in DB
  * */
-@Component
+@UtilityClass
 public class EventConvertor {
 
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-    public Location convert(@NotNull Coordinate coordinates) {
+    public static Date parseISODate(String isoDate) throws ParseException {
+        return simpleDateFormat.parse(isoDate);
+    }
+
+    public static String formatISODate(Date isoDate) {
+        return simpleDateFormat.format(isoDate);
+    }
+
+    public static Location convert(@NotNull Coordinate coordinates) {
         return Location.builder()
                 .type("Point")
                 .coordinates(
@@ -29,7 +39,7 @@ public class EventConvertor {
                 .build();
     }
 
-    public Coordinate convert(@NotNull Location location) {
+    public static Coordinate convert(@NotNull Location location) {
         if(location.getCoordinates() == null || location.getCoordinates().size() < 2) {
             return Coordinate.getDefaultInstance();
         }
@@ -39,7 +49,7 @@ public class EventConvertor {
                 .build();
     }
 
-    public Event convert(@NotNull EventPojo eventPojo) {
+    public static Event convert(@NotNull EventPojo eventPojo) {
         return Event.newBuilder()
                 .setId(eventPojo.getId())
                 .setName(eventPojo.getName())
@@ -51,14 +61,14 @@ public class EventConvertor {
                 .build();
     }
 
-    public EventPojo convert(@NotNull Event event) throws ParseException {
+    public static EventPojo convert(@NotNull Event event) throws ParseException {
         return EventPojo.builder()
                 .id(event.getId())
                 .name(event.getName())
                 .type(event.getType())
                 .description(event.getDescription())
-                .startTimestamp(simpleDateFormat.parse(event.getStartTimestamp()))
-                .endTimestamp(simpleDateFormat.parse(event.getEndTimestamp()))
+                .startTimestamp(parseISODate(event.getStartTimestamp()))
+                .endTimestamp(parseISODate(event.getEndTimestamp()))
                 .location(convert(event.getLocation()))
                 .build();
     }

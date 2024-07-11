@@ -5,7 +5,6 @@ import ln.dev.protos.event.EventStreamFilters;
 import ln.dev.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service

@@ -24,6 +24,5 @@ public class MongoFieldNames {
 
         public static final String COORDINATES = "coordinates";
 
-
     }
 }
