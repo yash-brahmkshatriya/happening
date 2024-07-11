@@ -1,6 +1,7 @@
 package ln.dev.subscription.service;
 
 import io.grpc.stub.StreamObserver;
+import ln.dev.grpc.ClientSubscription;
 import ln.dev.pojo.EventPojo;
 import ln.dev.protos.event.Event;
 import ln.dev.protos.event.EventStreamFilters;
@@ -25,17 +26,28 @@ public class EventSubscriptionService implements SubscriptionService<EventPojo, 
     }
 
     @Override
-    public EventSubscription subscribe(EventStreamFilters filters, StreamObserver<Event> responseObserver) {
+    public EventSubscription subscribe(EventStreamFilters filters, StreamObserver<ClientSubscription> responseObserver) {
         String subscriberId = IdGenerator.generate();
 
         EventSubscription subscriber = new EventSubscription(
                 subscriberId,
                 new Date(),
-                responseObserver,
                 filters
         );
         this.subscribers.put(subscriberId, subscriber);
         return subscriber;
+    }
+
+    @Override
+    public void listenSubscription(String subscriptionId, StreamObserver<Event> responseObserver) {
+        if(this.subscribers.containsKey(subscriptionId)) {
+            EventSubscription subscription = this.subscribers.get(subscriptionId);
+            subscription.setResponseObserver(
+                    Optional.of(responseObserver)
+            );
+            this.subscribers.put(subscriptionId, subscription);
+        }
+        // TODO: write else path
     }
 
     @Override
@@ -44,12 +56,19 @@ public class EventSubscriptionService implements SubscriptionService<EventPojo, 
                 .map(subscriptionId -> subscribers.getOrDefault(subscriptionId, null))
                 .filter(Objects::nonNull)
                 .map(EventSubscription::getResponseObserver)
-                .filter(Objects::nonNull)
-                .forEach(streamObserver -> streamObserver.onNext(event));
+                .forEach(optionalStreamObserver ->
+                        optionalStreamObserver.ifPresent(
+                            observer -> observer.onNext(event)
+                        )
+                );
     }
 
     @Override
     public void unsubscribe(String subscriptionId) {
+        if(this.subscribers.containsKey(subscriptionId)) {
+            var optionalResponseObserver = this.subscribers.get(subscriptionId).getResponseObserver();
+            optionalResponseObserver.ifPresent(StreamObserver::onCompleted);
+        }
         this.subscribers.remove(subscriptionId);
     }
 }

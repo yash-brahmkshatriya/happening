@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Data
 @NoArgsConstructor
@@ -16,9 +17,11 @@ public abstract class Subscription<P, G, F> {
 
     private Date timestamp;
 
-    private StreamObserver<G> responseObserver;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private Optional<StreamObserver<G>> responseObserver;
 
     private F filters;
 
     protected abstract boolean applyFilter(P p);
+
 }

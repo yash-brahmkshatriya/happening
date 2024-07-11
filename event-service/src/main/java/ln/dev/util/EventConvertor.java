@@ -26,6 +26,10 @@ public class EventConvertor {
         return simpleDateFormat.parse(isoDate);
     }
 
+    public static String formatISODate(Date isoDate) {
+        return simpleDateFormat.format(isoDate);
+    }
+
     public static Location convert(@NotNull Coordinate coordinates) {
         return Location.builder()
                 .type("Point")

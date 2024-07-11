@@ -1,6 +1,5 @@
 package ln.dev.subscription.model;
 
-import io.grpc.stub.StreamObserver;
 import ln.dev.pojo.EventPojo;
 import ln.dev.protos.event.Event;
 import ln.dev.protos.event.EventStreamFilters;
@@ -13,14 +12,15 @@ import org.springframework.util.Assert;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class EventSubscription extends Subscription<EventPojo, Event, EventStreamFilters> {
 
-    public EventSubscription(String subscriptionId, Date timestamp, StreamObserver<Event> responseObserver, EventStreamFilters filters) {
-        super(subscriptionId, timestamp, responseObserver, filters);
+    public EventSubscription(String subscriptionId, Date timestamp, EventStreamFilters filters) {
+        super(subscriptionId, timestamp, Optional.empty(), filters);
     }
 
     /**

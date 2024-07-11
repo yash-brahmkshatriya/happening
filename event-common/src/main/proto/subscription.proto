@@ -1,21 +1,23 @@
 syntax = "proto3";
 
 package ln.dev.grpc;
-import "common.proto";
 import "event.proto";
+import "common.proto";
 
 option java_multiple_files = true;
 option java_package = "ln.dev.grpc";
 
 service SubscriptionService {
-  rpc SubscribeEvents(EventSubscriptionRequest) returns (SubscriptionResponse) { }
+  rpc SubscribeToEvents (EventSubscriptionRequest) returns (ClientSubscription) { }
+  rpc ListenSubscription (ClientSubscription) returns (stream ln.dev.protos.Event) { }
+  rpc Unsubscribe (ClientSubscription) returns (ln.dev.protos.Empty) { }
 }
 
 message EventSubscriptionRequest {
   ln.dev.protos.EventStreamFilters filters = 1;
 }
 
-message SubscriptionResponse {
+message ClientSubscription {
   string subscriptionId = 1;
   string timestamp = 2;
 }

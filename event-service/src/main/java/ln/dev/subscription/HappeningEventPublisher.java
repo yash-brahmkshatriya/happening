@@ -2,7 +2,9 @@ package ln.dev.subscription;
 
 import com.google.common.eventbus.EventBus;
 import ln.dev.pojo.EventPojo;
+import org.springframework.stereotype.Component;
 
+@Component
 public class HappeningEventPublisher {
 
     private final EventBus happeningEventBus;
