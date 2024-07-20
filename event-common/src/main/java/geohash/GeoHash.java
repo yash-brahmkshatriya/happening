@@ -174,4 +174,17 @@ public final class GeoHash {
         }
         return String.valueOf(hashLevels);
     }
+
+    public static Neighbors findNeighbors(String geoHash) {
+        return Neighbors.builder()
+                .north(adjacent(geoHash, Direction.NORTH))
+                .northWest(adjacent(adjacent(geoHash, Direction.WEST), Direction.NORTH))
+                .west(adjacent(geoHash, Direction.WEST))
+                .southWest(adjacent(adjacent(geoHash, Direction.WEST), Direction.SOUTH))
+                .south(adjacent(geoHash, Direction.SOUTH))
+                .southEast(adjacent(adjacent(geoHash, Direction.EAST), Direction.SOUTH))
+                .east(adjacent(geoHash, Direction.EAST))
+                .northEast(adjacent(adjacent(geoHash, Direction.EAST), Direction.NORTH))
+                .build();
+    }
 }

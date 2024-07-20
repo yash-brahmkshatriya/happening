@@ -35,6 +35,19 @@ class GeoHashTest {
         assertEquals("zcp", GeoHash.adjacent(geoHash, Direction.NORTH));
         assertEquals("zby", GeoHash.adjacent(geoHash, Direction.WEST));
         assertEquals("zbx", GeoHash.adjacent(geoHash, Direction.SOUTH));
+    }
 
+    @Test
+    void neighbors() {
+        String geoHash = "zbz";
+        Neighbors neighbors = GeoHash.findNeighbors(geoHash);
+        assertEquals("b0b", neighbors.getEast());
+        assertEquals("b10", neighbors.getNorthEast());
+        assertEquals("zcp", neighbors.getNorth());
+        assertEquals("zcn", neighbors.getNorthWest());
+        assertEquals("zby", neighbors.getWest());
+        assertEquals("zbw", neighbors.getSouthWest());
+        assertEquals("zbx", neighbors.getSouth());
+        assertEquals("b08", neighbors.getSouthEast());
     }
 }
