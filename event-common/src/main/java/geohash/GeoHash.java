@@ -1,12 +1,40 @@
 package geohash;
 
+import common.Pair;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
 
-public class GeoHash {
+public final class GeoHash {
     public static final int MAX_HASH_PRECISION = 12;
 
     public static final int DEFAULT_HASH_PRECISION = 6;
+
+    private static final HashMap<GeoHashBlock, Character> indicesToCharMap = new HashMap<>();
+
+    private static final HashMap<Character, GeoHashBlock> charToIndicesMap = new HashMap<>();
+
+    static {
+        String[] baseBlocks = {
+                "bcfguvyz",
+                "89destwx",
+                "2367kmqr",
+                "0145hjnp"
+        };
+        for (int i = 0; i < baseBlocks.length; i++) {
+            for (int j = 0; j < baseBlocks[i].length(); j++) {
+                GeoHashBlock block = new GeoHashBlock(i, j);
+                char ch = baseBlocks[i].charAt(j);
+                indicesToCharMap.put(block, ch);
+                charToIndicesMap.put(ch, block);
+            }
+        }
+    }
+
+    private static void checkIfGeoHashCharOrThrow(char ch) {
+        if(!Base32.isBase32Char(ch)) throw new IllegalArgumentException("Not a valid geohash character");
+    }
 
     public static long encodeToDecimalHash(LatLonCoordinate coordinate, int precision) {
         if(precision > MAX_HASH_PRECISION)
@@ -70,8 +98,6 @@ public class GeoHash {
                 .latitude(BigDecimal.valueOf(latCentre).setScale(decimalPrecisionOfLat, RoundingMode.HALF_UP).doubleValue())
                 .longitude(BigDecimal.valueOf(lonCentre).setScale(decimalPrecisionOfLon, RoundingMode.HALF_UP).doubleValue())
                 .build();
-
-
     }
 
     public static Bounds getBounds(String geoHash) {
@@ -115,5 +141,37 @@ public class GeoHash {
                 )
                 .build();
 
+    }
+
+    private static char findAdjacentBase32Char(char ch, Direction direction) {
+        checkIfGeoHashCharOrThrow(ch);
+        if(!charToIndicesMap.containsKey(ch)) throw new RuntimeException("Character indices not found for ch=" + ch);
+        return indicesToCharMap.get(
+                charToIndicesMap.get(ch)
+                        .createCopy()
+                        .move(1, direction)
+        );
+    }
+
+    private static boolean doesItCrossBoundary(char ch, Direction direction) {
+        checkIfGeoHashCharOrThrow(ch);
+        return charToIndicesMap.get(ch).doesItCrossBoundaryWileMoving(direction);
+    }
+    
+    public static String adjacent(String geoHash, Direction direction) {
+        char[] hashLevels = geoHash.toCharArray();
+        boolean shouldUpdateParentLevelBlock = true;
+        for(int i = hashLevels.length - 1; i >= 0; i--) {
+            if(!shouldUpdateParentLevelBlock) break;
+
+            boolean isHorizontalLayout = i % 2 == 0;
+            Direction realizedDirection = isHorizontalLayout ? direction : Direction.getComplementDirection(direction);
+
+            shouldUpdateParentLevelBlock = doesItCrossBoundary(hashLevels[i], realizedDirection);
+
+            char adjacentBlock = findAdjacentBase32Char(hashLevels[i], realizedDirection);
+            hashLevels[i] = adjacentBlock;
+        }
+        return String.valueOf(hashLevels);
     }
 }

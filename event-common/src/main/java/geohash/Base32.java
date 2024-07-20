@@ -17,6 +17,10 @@ public class Base32 {
         for (char c: base32Characters) charToNumberMap.put(c, i++);
     }
 
+    public static boolean isBase32Char(char ch) {
+        return charToNumberMap.containsKey(ch);
+    }
+
     public static String encode(Long decimalGeoHash) {
         StringBuilder base32GeoHash = new StringBuilder();
         while (decimalGeoHash > 0) {
@@ -43,7 +47,7 @@ public class Base32 {
     }
 
     static int getCharNumber(char ch) {
-        if(charToNumberMap.containsKey(ch)) return charToNumberMap.get(ch);
+        if(isBase32Char(ch)) return charToNumberMap.get(ch);
         else throw new IllegalArgumentException("Not a base32 character: " + ch);
     }
 

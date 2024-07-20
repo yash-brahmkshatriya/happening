@@ -27,4 +27,14 @@ class GeoHashTest {
         LatLonCoordinate decodedCoordinate = GeoHash.decode("gbsuv7");
         assertEquals(coordinate, decodedCoordinate);
     }
+
+    @Test
+    void adjacent() {
+        String geoHash = "zbz";
+        assertEquals("b0b", GeoHash.adjacent(geoHash, Direction.EAST));
+        assertEquals("zcp", GeoHash.adjacent(geoHash, Direction.NORTH));
+        assertEquals("zby", GeoHash.adjacent(geoHash, Direction.WEST));
+        assertEquals("zbx", GeoHash.adjacent(geoHash, Direction.SOUTH));
+
+    }
 }
