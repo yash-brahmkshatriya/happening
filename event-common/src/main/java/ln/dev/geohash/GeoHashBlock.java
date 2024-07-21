@@ -1,6 +1,6 @@
-package geohash;
+package ln.dev.geohash;
 
-import common.Pair;
+import ln.dev.common.Pair;
 
 public class GeoHashBlock extends Pair<Integer, Integer> {
 

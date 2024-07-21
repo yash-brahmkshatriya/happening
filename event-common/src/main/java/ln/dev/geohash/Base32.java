@@ -1,6 +1,10 @@
-package geohash;
+package ln.dev.geohash;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Base32 {
 
@@ -17,8 +21,21 @@ public class Base32 {
         for (char c: base32Characters) charToNumberMap.put(c, i++);
     }
 
+    public static List<Character> getBase32Characters() {
+        return IntStream.range(0, base32Characters.length)
+                .mapToObj(i -> base32Characters[i])
+                .collect(Collectors.toList());
+    }
+
     public static boolean isBase32Char(char ch) {
         return charToNumberMap.containsKey(ch);
+    }
+
+    public static boolean isValidBase32String(String s) {
+        return IntStream.range(0, s.length())
+                .mapToObj(s::charAt)
+                .map(Base32::isBase32Char)
+                .reduce(true, (acc, curr) -> acc && curr);
     }
 
     public static String encode(Long decimalGeoHash) {
@@ -46,7 +63,7 @@ public class Base32 {
         return decimalGeoHash;
     }
 
-    static int getCharNumber(char ch) {
+    public static int getCharNumber(char ch) {
         if(isBase32Char(ch)) return charToNumberMap.get(ch);
         else throw new IllegalArgumentException("Not a base32 character: " + ch);
     }

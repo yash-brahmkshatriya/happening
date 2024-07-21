@@ -1,4 +1,4 @@
-package geohash;
+package ln.dev.geohash;
 
 import lombok.Builder;
 import lombok.Data;

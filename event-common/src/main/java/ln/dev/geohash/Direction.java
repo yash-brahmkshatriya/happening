@@ -1,4 +1,4 @@
-package geohash;
+package ln.dev.geohash;
 
 public enum Direction {
     NORTH,

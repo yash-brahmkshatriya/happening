@@ -1,6 +1,4 @@
-package geohash;
-
-import common.Pair;
+package ln.dev.geohash;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

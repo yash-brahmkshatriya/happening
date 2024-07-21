@@ -1,5 +1,9 @@
 package geohash;
 
+import ln.dev.geohash.Direction;
+import ln.dev.geohash.GeoHash;
+import ln.dev.geohash.LatLonCoordinate;
+import ln.dev.geohash.Neighbors;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
