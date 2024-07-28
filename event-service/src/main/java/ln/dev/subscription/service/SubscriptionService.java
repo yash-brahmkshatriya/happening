@@ -10,9 +10,9 @@ import java.util.List;
 /**
 *
 * */
-public interface SubscriptionService<P, G, F> {
+public interface SubscriptionService<C, G, T> {
 
-    Subscription<P, G, F> subscribe(F filters, StreamObserver<ClientSubscription> responseObserver);
+    C subscribe(T requestData, StreamObserver<ClientSubscription> responseObserver);
 
     void listenSubscription(String subscriptionId, StreamObserver<G> responseObserver);
 

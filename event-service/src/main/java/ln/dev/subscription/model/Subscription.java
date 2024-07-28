@@ -1,9 +1,7 @@
 package ln.dev.subscription.model;
 
 import io.grpc.stub.StreamObserver;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 import java.util.Optional;
@@ -11,7 +9,7 @@ import java.util.Optional;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class Subscription<P, G, F> {
+public abstract class Subscription<G, T> {
 
     private String subscriptionId;
 
@@ -20,8 +18,12 @@ public abstract class Subscription<P, G, F> {
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private Optional<StreamObserver<G>> responseObserver;
 
-    private F filters;
+    @Setter(AccessLevel.NONE)
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private Optional<T> requestData;
 
-    protected abstract boolean applyFilter(P p);
+    public void updateRequestData(T requestData) {
+        this.requestData = Optional.of(requestData);
+    }
 
 }

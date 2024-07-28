@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.stream.IntStream;
 
-public class GeoHashTree<D extends LatLonCoordinate> {
+public class GeoHashTree<D> {
 
     private final GeoHashNode<D> root;
 
@@ -33,9 +33,7 @@ public class GeoHashTree<D extends LatLonCoordinate> {
         }
     }
 
-    public void add(D element) {
-        String geoHash = GeoHash.encode(element, this.precision);
-
+    public GeoHashNode<D> findNodeByGeoHash(String geoHash) {
         Queue<Character> hashQueue = new LinkedList<>();
 
         IntStream.range(0, geoHash.length())
@@ -55,7 +53,17 @@ public class GeoHashTree<D extends LatLonCoordinate> {
             node = nextChild.get();
         }
 
-        node.getElements().add(element);
+        return node;
+    }
+
+    public void add(D element, LatLonCoordinate coordinate) {
+        String geoHash = GeoHash.encode(coordinate, this.precision);
+        findNodeByGeoHash(geoHash).getElements().add(element);
+    }
+
+    public void remove(D element, LatLonCoordinate coordinate) {
+        String geoHash = GeoHash.encode(coordinate, this.precision);
+        findNodeByGeoHash(geoHash).getElements().remove(element);
     }
 
     public List<D> findElementsByGeoHash(String geoHash) {
