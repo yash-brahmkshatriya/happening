@@ -4,6 +4,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
 
+/**
+ * GeoHash is a geospatial indexing to get proximity information
+ * It divides earth surface into 32 parts recursively to achieve required precision.
+ */
 public final class GeoHash {
     public static final int MAX_HASH_PRECISION = 12;
 
@@ -13,6 +17,7 @@ public final class GeoHash {
 
     private static final HashMap<Character, GeoHashBlock> charToIndicesMap = new HashMap<>();
 
+    /* Bas32 character to indices map and vice versa */
     static {
         String[] baseBlocks = {
                 "bcfguvyz",
@@ -30,13 +35,25 @@ public final class GeoHash {
         }
     }
 
+    /**
+     * Checks if given character is valid geohash character
+     * @param ch character to check
+     * @throws IllegalArgumentException if character is invalid geohash char
+     */
     private static void checkIfGeoHashCharOrThrow(char ch) {
         if(!Base32.isBase32Char(ch)) throw new IllegalArgumentException("Not a valid geohash character");
     }
 
+    /**
+     * Encodes the coordinate to geohash with base 10 (decimal) with 5 bits giving one level
+     * @param coordinate coordinate to convert to geo hash
+     * @param precision level of precision needed (1 upto 12)
+     * @return decimal representation of Geohash
+     * @throws IllegalArgumentException if precision is less than 0 or greater than 12
+     */
     public static long encodeToDecimalHash(LatLonCoordinate coordinate, int precision) {
-        if(precision > MAX_HASH_PRECISION)
-            throw new IllegalArgumentException("Precision = " + precision + " is greater than max allowed precision of geohash = " + MAX_HASH_PRECISION);
+        if(precision > MAX_HASH_PRECISION || precision < 0)
+            throw new IllegalArgumentException("Precision = " + precision + " is not in range [0," + MAX_HASH_PRECISION + "]");
 
         long decimalGeoHash = 0;
 
@@ -69,14 +86,31 @@ public final class GeoHash {
         return decimalGeoHash;
     }
 
+    /**
+     * Encodes the coordinate to geohash with base 32
+     * @param coordinate coordinate to convert to geo hash
+     * @param precision level of precision needed (1 upto 12)
+     * @return Base32 representation of Geohash
+     * @throws IllegalArgumentException if precision is less than 0 or greater than 12
+     */
     public static String encode(LatLonCoordinate coordinate, int precision) {
         return Base32.encode(encodeToDecimalHash(coordinate, precision));
     }
 
+    /**
+     * Encodes the coordinate to geohash with base 32
+     * @param coordinate coordinate to convert to geo hash
+     * @return Base32 representation of Geohash with default precision
+     */
     public static String encode(LatLonCoordinate coordinate) {
         return encode(coordinate, DEFAULT_HASH_PRECISION);
     }
 
+    /**
+     * Returns the latitude and longitude of given geohash based on level of precision
+     * @param geoHash the hash to decode
+     * @return coordinates in Latitude-longitude system
+     */
     public static LatLonCoordinate decode(String geoHash) {
         Bounds bounds = getBounds(geoHash);
 
@@ -98,6 +132,32 @@ public final class GeoHash {
                 .build();
     }
 
+    /**
+     * Method to find precision required to cover region with given radius in KMs based on division by geo hashes
+     * @param radius the radius of the region to query
+     * @return the amount of hash precision required
+     */
+    public static int precisionRequired(double radius) {
+        if (radius >= 5000) return 0;
+        if (radius >= 625) return 1;
+        if (radius >= 156) return 2;
+        if (radius >= 19.5) return 3;
+        if (radius >= 4.89) return 4;
+        if (radius >= 0.61) return 5;
+        if (radius >= 0.153) return 6;
+        if (radius >= 0.0191) return 7;
+        if (radius >= 0.00477) return 8;
+        if (radius >= 0.000596) return 9;
+        if (radius >= 0.00015) return 10;
+        if (radius >= 0.000019) return 11;
+        return 12;
+    }
+
+    /**
+     * Finds the bounds of the rectangle covered by given geohash
+     * @param geoHash hash to find bounds of
+     * @return NorthWest and SouthEast coordinates of the rectangle
+     */
     public static Bounds getBounds(String geoHash) {
         if(geoHash.isEmpty()) throw new IllegalArgumentException("Invalid Geohash");
         String hash = geoHash.toLowerCase();
@@ -141,6 +201,12 @@ public final class GeoHash {
 
     }
 
+    /**
+     * Finds adjacent block of character
+     * @param ch character of which adjacent is supposed to be found
+     * @param direction direction in which adjacent is supposed to be found
+     * @return adjacent character
+     */
     private static char findAdjacentBase32Char(char ch, Direction direction) {
         checkIfGeoHashCharOrThrow(ch);
         if(!charToIndicesMap.containsKey(ch)) throw new RuntimeException("Character indices not found for ch=" + ch);
@@ -151,11 +217,23 @@ public final class GeoHash {
         );
     }
 
+    /**
+     * Checks if adjacent block in the given direction crosses parent level's boundary
+     * @param ch character to check
+     * @param direction direction to check
+     * @return true if crosses boundary
+     */
     private static boolean doesItCrossBoundary(char ch, Direction direction) {
         checkIfGeoHashCharOrThrow(ch);
         return charToIndicesMap.get(ch).doesItCrossBoundaryWileMoving(direction);
     }
-    
+
+    /**
+     * Finds adjacent block of geohash in the given direction
+     * @param geoHash hash of which adjacent is to be found
+     * @param direction direction in which adjacent is to be found
+     * @return adjacent geohash in the given direction
+     */
     public static String adjacent(String geoHash, Direction direction) {
         char[] hashLevels = geoHash.toCharArray();
         boolean shouldUpdateParentLevelBlock = true;
@@ -173,6 +251,11 @@ public final class GeoHash {
         return String.valueOf(hashLevels);
     }
 
+    /**
+     * Finds neighbors of given geohash in all 8 directions: N, NW, W, SW, S, SE, E, NE
+     * @param geoHash hash of which neighbors are to be found
+     * @return Geohashes of all 8 neighbors
+     */
     public static Neighbors findNeighbors(String geoHash) {
         return Neighbors.builder()
                 .north(adjacent(geoHash, Direction.NORTH))
