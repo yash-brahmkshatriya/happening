@@ -9,7 +9,7 @@ import java.util.HashMap;
  * It divides earth surface into 32 parts recursively to achieve required precision.
  */
 public final class GeoHash {
-    public static final int MAX_HASH_PRECISION = 12;
+    public static final int MAX_HASH_PRECISION = 9;
 
     public static final int DEFAULT_HASH_PRECISION = 6;
 
@@ -147,10 +147,7 @@ public final class GeoHash {
         if (radius >= 0.153) return 6;
         if (radius >= 0.0191) return 7;
         if (radius >= 0.00477) return 8;
-        if (radius >= 0.000596) return 9;
-        if (radius >= 0.00015) return 10;
-        if (radius >= 0.000019) return 11;
-        return 12;
+        return 9;
     }
 
     /**
