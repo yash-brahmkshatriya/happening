@@ -1,9 +1,9 @@
 package geohash;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import ln.dev.geohash.Base32;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class Base32Test {
 
@@ -31,7 +31,7 @@ class Base32Test {
     }
 
     @Test
-    void getCharNumberWithInvalidInput(){
+    void getCharNumberWithInvalidInput() {
         assertThrows(IllegalArgumentException.class, () -> Base32.getCharNumber('a'));
     }
 }

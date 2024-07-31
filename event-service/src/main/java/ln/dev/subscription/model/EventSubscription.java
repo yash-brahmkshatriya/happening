@@ -1,7 +1,10 @@
 package ln.dev.subscription.model;
 
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Optional;
+import java.util.regex.Pattern;
 import ln.dev.geohash.LatLonCoordinate;
-import ln.dev.pojo.EventPojo;
 import ln.dev.protos.event.Event;
 import ln.dev.protos.event.EventStreamFilters;
 import ln.dev.protos.event.TimestampFilter;
@@ -12,11 +15,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import org.springframework.util.Assert;
-
-import java.text.ParseException;
-import java.util.Date;
-import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -31,34 +29,32 @@ public class EventSubscription extends Subscription<Event, EventStreamFilters> {
     }
 
     public void updateRequestDate(EventStreamFilters eventStreamFilters) {
-        this.latLonCoordinate = new LatLonCoordinate(
-                eventStreamFilters.getProximityFilter().getLocation()
-        );
+        this.latLonCoordinate =
+                new LatLonCoordinate(eventStreamFilters.getProximityFilter().getLocation());
         super.updateRequestData(eventStreamFilters);
     }
 
     /**
      * Returns if the incoming event passes the request filters.
      * The proximity filtering will already be applied beforehand
-    * */
-    public boolean applyFilter(Event event)  {
-        if(this.getRequestData().isEmpty()) return true;
+     * */
+    public boolean applyFilter(Event event) {
+        if (this.getRequestData().isEmpty()) return true;
         EventStreamFilters filters = this.getRequestData().get();
 
-
-        if(filters.getName().isEmpty()) {
+        if (filters.getName().isEmpty()) {
             Pattern pattern = Pattern.compile(filters.getName(), Pattern.CASE_INSENSITIVE);
             boolean matches = event.getName().matches(pattern.pattern());
-            if(!matches) return false;
+            if (!matches) return false;
         }
-        if(!filters.getTypeList().isEmpty()) {
-            if(!filters.getTypeList().contains(event.getType())) return false;
+        if (!filters.getTypeList().isEmpty()) {
+            if (!filters.getTypeList().contains(event.getType())) return false;
         }
 
         try {
             Date filterBasedOnDate;
             TimestampFilter timestampFilter = this.getRequestData().get().getTimestampFilter();
-            if(timestampFilter.getTimestampFilterKey().equals(TimestampFilterKey.START)) {
+            if (timestampFilter.getTimestampFilterKey().equals(TimestampFilterKey.START)) {
                 filterBasedOnDate = EventConvertor.parseISODate(event.getStartTimestamp());
             } else filterBasedOnDate = EventConvertor.parseISODate(event.getEndTimestamp());
             Assert.notNull(filterBasedOnDate, "Incoming Event timestamp is null");
@@ -70,8 +66,8 @@ public class EventSubscription extends Subscription<Event, EventStreamFilters> {
                     return filterBasedOnDate.before(EventConvertor.parseISODate(timestampFilter.getTimestamp()));
                 }
                 case BETWEEN -> {
-                    return filterBasedOnDate.after(EventConvertor.parseISODate(timestampFilter.getTimestamp())) &&
-                            filterBasedOnDate.before(EventConvertor.parseISODate(timestampFilter.getTimestamp2()));
+                    return filterBasedOnDate.after(EventConvertor.parseISODate(timestampFilter.getTimestamp()))
+                            && filterBasedOnDate.before(EventConvertor.parseISODate(timestampFilter.getTimestamp2()));
                 }
             }
         } catch (ParseException e) {

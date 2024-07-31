@@ -1,6 +1,6 @@
 package ln.dev.repository;
 
-
+import java.util.List;
 import ln.dev.pojo.EventPojo;
 import ln.dev.protos.event.EventStreamFilters;
 import ln.dev.repository.helper.EventCriteriaBuilder;
@@ -9,8 +9,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.NearQuery;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public class CustomEventRepositoryImpl implements CustomEventRepository {
@@ -28,13 +26,9 @@ public class CustomEventRepositoryImpl implements CustomEventRepository {
     public List<EventPojo> findByEventFilters(EventStreamFilters eventFilters) {
         NearQuery nearQuery = eventCriteriaBuilder
                 .buildNearQuery(eventFilters.getProximityFilter())
-                .query(
-                        new Query(eventCriteriaBuilder.buildFilterCriterias(eventFilters))
-                );
+                .query(new Query(eventCriteriaBuilder.buildFilterCriterias(eventFilters)));
 
-        return mongoTemplate.geoNear(nearQuery, EventPojo.class)
-                .getContent()
-                .stream()
+        return mongoTemplate.geoNear(nearQuery, EventPojo.class).getContent().stream()
                 .map(GeoResult::getContent)
                 .toList();
     }

@@ -12,7 +12,6 @@ public class HappeningEventListener extends GeoHashProximity {
 
     private final EventSubscriptionService eventSubscriptionService;
 
-
     public HappeningEventListener(EventSubscriptionService eventSubscriptionService) {
         this.eventSubscriptionService = eventSubscriptionService;
     }
@@ -21,5 +20,4 @@ public class HappeningEventListener extends GeoHashProximity {
     public void handleHappeningEvent(EventPojo eventPojo) {
         eventSubscriptionService.publish(EventConvertor.convert(eventPojo));
     }
-
 }

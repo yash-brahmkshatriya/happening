@@ -1,17 +1,15 @@
 package ln.dev.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import ln.dev.pojo.EventPojo;
 import ln.dev.pojo.Location;
 import ln.dev.protos.coordinate.Coordinate;
 import ln.dev.protos.event.Event;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Component;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -33,14 +31,12 @@ public class EventConvertor {
     public static Location convert(@NotNull Coordinate coordinates) {
         return Location.builder()
                 .type("Point")
-                .coordinates(
-                        List.of(coordinates.getLongitude(), coordinates.getLatitude())
-                )
+                .coordinates(List.of(coordinates.getLongitude(), coordinates.getLatitude()))
                 .build();
     }
 
     public static Coordinate convert(@NotNull Location location) {
-        if(location.getCoordinates() == null || location.getCoordinates().size() < 2) {
+        if (location.getCoordinates() == null || location.getCoordinates().size() < 2) {
             return Coordinate.getDefaultInstance();
         }
         return Coordinate.newBuilder()
@@ -72,5 +68,4 @@ public class EventConvertor {
                 .location(convert(event.getLocation()))
                 .build();
     }
-
 }

@@ -1,11 +1,10 @@
 package ln.dev.service;
 
+import java.util.List;
 import ln.dev.pojo.EventPojo;
 import ln.dev.protos.event.EventStreamFilters;
 import ln.dev.repository.EventRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class EventService {
@@ -25,5 +24,4 @@ public class EventService {
     public List<EventPojo> findByFilters(EventStreamFilters eventStreamFilters) {
         return eventRepository.findByEventFilters(eventStreamFilters);
     }
-
 }

@@ -29,5 +29,4 @@ public class LatLonCoordinate {
     public String toString() {
         return "[Lat=" + this.latitude + ", Lon=" + this.longitude + "]";
     }
-
 }

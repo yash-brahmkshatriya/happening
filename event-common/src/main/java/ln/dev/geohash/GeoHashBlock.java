@@ -15,22 +15,12 @@ public class GeoHashBlock extends Pair<Integer, Integer> {
         super(row, col);
     }
 
-
-
     public GeoHashBlock move(int blocks, Direction direction) {
         switch (direction) {
-            case EAST -> this.setSecond(
-                    (this.getSecond() + (blocks % EW_BLOCKS)) % EW_BLOCKS
-            );
-            case WEST -> this.setSecond(
-                    (this.getSecond() - (blocks % EW_BLOCKS) + EW_BLOCKS) % EW_BLOCKS
-            );
-            case NORTH -> this.setFirst(
-                    (this.getFirst() - (blocks % NS_BLOCKS) + NS_BLOCKS) % EW_BLOCKS
-            );
-            case SOUTH -> this.setFirst(
-                    (this.getFirst() + (blocks % EW_BLOCKS)) % EW_BLOCKS
-            );
+            case EAST -> this.setSecond((this.getSecond() + (blocks % EW_BLOCKS)) % EW_BLOCKS);
+            case WEST -> this.setSecond((this.getSecond() - (blocks % EW_BLOCKS) + EW_BLOCKS) % EW_BLOCKS);
+            case NORTH -> this.setFirst((this.getFirst() - (blocks % NS_BLOCKS) + NS_BLOCKS) % EW_BLOCKS);
+            case SOUTH -> this.setFirst((this.getFirst() + (blocks % EW_BLOCKS)) % EW_BLOCKS);
         }
         return this;
     }

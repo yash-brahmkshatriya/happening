@@ -1,12 +1,10 @@
 package ln.dev.proximity.geohash;
 
-
-import ln.dev.geohash.Base32;
-import lombok.*;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import ln.dev.geohash.Base32;
+import lombok.*;
 
 @Data
 @Builder
@@ -30,7 +28,7 @@ public class GeoHashNode<D> {
     }
 
     private void initializeChildren(boolean willHaveChildren) {
-        if(willHaveChildren) {
+        if (willHaveChildren) {
             this.children = new ArrayList<>();
         } else {
             this.children = Collections.emptyList();
@@ -38,16 +36,14 @@ public class GeoHashNode<D> {
     }
 
     public void produceChildren(boolean willHaveChildren) {
-        Base32.getBase32Characters()
-                .forEach(character -> {
-                    this.children.add(new GeoHashNode<>(character, this.level + 1, willHaveChildren));
-                });
+        Base32.getBase32Characters().forEach(character -> {
+            this.children.add(new GeoHashNode<>(character, this.level + 1, willHaveChildren));
+        });
     }
 
     public List<D> getDescendantElements() {
         List<D> elements = new ArrayList<>(this.elements);
-        this.getChildren()
-                .stream()
+        this.getChildren().stream()
                 .flatMap(child -> child.getDescendantElements().stream())
                 .forEach(elements::add);
         return elements;

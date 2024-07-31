@@ -2,6 +2,9 @@ package ln.dev.service.grpc;
 
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import ln.dev.grpc.EventRequest;
 import ln.dev.grpc.EventServiceGrpc;
 import ln.dev.grpc.HeartbeatResponse;
@@ -11,10 +14,6 @@ import ln.dev.protos.event.Event;
 import ln.dev.service.EventService;
 import ln.dev.util.EventConvertor;
 import net.devh.boot.grpc.server.service.GrpcService;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @GrpcService
 public class EventServiceGrpcImpl extends EventServiceGrpc.EventServiceImplBase {
@@ -27,9 +26,9 @@ public class EventServiceGrpcImpl extends EventServiceGrpc.EventServiceImplBase 
 
     @Override
     public void activeEvents(EventRequest request, StreamObserver<Event> responseObserver) {
-        eventService.findByFilters(request.getFilters())
-                        .stream().map(EventConvertor::convert)
-                        .forEach(responseObserver::onNext);
+        eventService.findByFilters(request.getFilters()).stream()
+                .map(EventConvertor::convert)
+                .forEach(responseObserver::onNext);
 
         responseObserver.onCompleted();
     }
@@ -37,15 +36,15 @@ public class EventServiceGrpcImpl extends EventServiceGrpc.EventServiceImplBase 
     @Override
     public void addEvent(Event request, StreamObserver<Event> responseObserver) {
         try {
-            EventPojo eventPojo = eventService.createEvent(
-                    EventConvertor.convert(request)
-            );
+            EventPojo eventPojo = eventService.createEvent(EventConvertor.convert(request));
             responseObserver.onNext(EventConvertor.convert(eventPojo));
             responseObserver.onCompleted();
         } catch (ParseException e) {
-            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription(e.getMessage()).asRuntimeException());
+            responseObserver.onError(
+                    Status.INVALID_ARGUMENT.withDescription(e.getMessage()).asRuntimeException());
         } catch (Exception e) {
-            responseObserver.onError(Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException());
+            responseObserver.onError(
+                    Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException());
         }
     }
 
@@ -53,9 +52,7 @@ public class EventServiceGrpcImpl extends EventServiceGrpc.EventServiceImplBase 
     public void heartbeat(Common.Empty request, StreamObserver<HeartbeatResponse> responseObserver) {
         HeartbeatResponse heartbeatResponse = HeartbeatResponse.newBuilder()
                 .setMessage("Heartbeat success")
-                .setTimestamp(
-                        new SimpleDateFormat("yyyy-MM-dd HH.mm.ss").format(new Date())
-                )
+                .setTimestamp(new SimpleDateFormat("yyyy-MM-dd HH.mm.ss").format(new Date()))
                 .build();
 
         responseObserver.onNext(heartbeatResponse);

@@ -23,6 +23,5 @@ public class MongoFieldNames {
         public static final String LOCATION_TYPE = "type";
 
         public static final String COORDINATES = "coordinates";
-
     }
 }

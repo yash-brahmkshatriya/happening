@@ -1,21 +1,19 @@
 package geohash;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import ln.dev.geohash.Direction;
 import ln.dev.geohash.GeoHash;
 import ln.dev.geohash.LatLonCoordinate;
 import ln.dev.geohash.Neighbors;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class GeoHashTest {
 
     @Test
     void encode() {
-        LatLonCoordinate coordinate = LatLonCoordinate.builder()
-                .longitude(-4.334)
-                .latitude(48.6667)
-                .build();
+        LatLonCoordinate coordinate =
+                LatLonCoordinate.builder().longitude(-4.334).latitude(48.6667).build();
 
         String encodedGeoHash = GeoHash.encode(coordinate, 6);
         assertEquals("gbsuv7", encodedGeoHash);
@@ -23,10 +21,8 @@ class GeoHashTest {
 
     @Test
     void decode() {
-        LatLonCoordinate coordinate = LatLonCoordinate.builder()
-                .longitude(-4.334)
-                .latitude(48.6667)
-                .build();
+        LatLonCoordinate coordinate =
+                LatLonCoordinate.builder().longitude(-4.334).latitude(48.6667).build();
 
         LatLonCoordinate decodedCoordinate = GeoHash.decode("gbsuv7");
         assertEquals(coordinate, decodedCoordinate);
