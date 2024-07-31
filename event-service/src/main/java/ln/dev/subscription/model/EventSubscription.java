@@ -31,10 +31,9 @@ public class EventSubscription extends Subscription<Event, EventStreamFilters> {
     }
 
     public void updateRequestDate(EventStreamFilters eventStreamFilters) {
-        this.latLonCoordinate = LatLonCoordinate.builder()
-                .latitude(eventStreamFilters.getProximityFilter().getLocation().getLatitude())
-                .longitude(eventStreamFilters.getProximityFilter().getLocation().getLongitude())
-                .build();
+        this.latLonCoordinate = new LatLonCoordinate(
+                eventStreamFilters.getProximityFilter().getLocation()
+        );
         super.updateRequestData(eventStreamFilters);
     }
 

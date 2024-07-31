@@ -3,12 +3,12 @@ package ln.dev.subscription.service;
 import io.grpc.stub.StreamObserver;
 import ln.dev.geohash.LatLonCoordinate;
 import ln.dev.grpc.ClientSubscription;
-import ln.dev.pojo.EventPojo;
 import ln.dev.protos.event.Event;
 import ln.dev.protos.event.EventStreamFilters;
 import ln.dev.proximity.GeoHashProximity;
 import ln.dev.subscription.model.EventSubscription;
 import ln.dev.util.IdGenerator;
+import org.springframework.data.geo.Metrics;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -32,10 +32,9 @@ public class EventSubscriptionService extends GeoHashProximity
                 new Date(),
                 filters
         );
-        LatLonCoordinate subscriberLocation = LatLonCoordinate.builder()
-                .latitude(filters.getProximityFilter().getLocation().getLatitude())
-                .longitude(filters.getProximityFilter().getLocation().getLongitude())
-                .build();
+        LatLonCoordinate subscriberLocation = new LatLonCoordinate(
+                filters.getProximityFilter().getLocation()
+        );
         this.subscriberIdTree.add(subscriber.getSubscriptionId(), subscriberLocation);
         this.subscribers.put(subscriber.getSubscriptionId(), subscriber);
         return subscriber;
@@ -54,7 +53,7 @@ public class EventSubscriptionService extends GeoHashProximity
     }
 
     public void publish(Event event) {
-        publish(event, findAllInProximity(event, 0L));
+        publish(event, findAllInProximity(event, 0L, Metrics.KILOMETERS));
     }
 
     @Override
