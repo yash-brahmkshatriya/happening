@@ -19,11 +19,6 @@ import org.springframework.util.Assert;
 public class EventSubscription extends Subscription<Event, EventStreamFilters> {
 
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @Value("${event.subscription.spatial.error-rate:0.1}")
-    private double spatialErrorRate;
-
-    @Setter(AccessLevel.NONE)
     private LatLonCoordinate latLonCoordinate;
 
     public EventSubscription(String subscriptionId, Date timestamp, EventStreamFilters subscriptionRequestFilters) {
@@ -42,7 +37,7 @@ public class EventSubscription extends Subscription<Event, EventStreamFilters> {
         LatLonCoordinate p2 = new LatLonCoordinate(publishedEventCoordinate);
         double distanceInRadians = p1.distanceBetween(p2);
         double distanceInKms = distanceInRadians * Metrics.KILOMETERS.getMultiplier();
-        return (proximityFilter.getLocationRadius() - distanceInKms) <= distanceInKms * spatialErrorRate;
+        return distanceInKms <= proximityFilter.getLocationRadius();
     }
 
     public boolean applyNameFilter(String subscribedFilterName, String publishedEventName) {
