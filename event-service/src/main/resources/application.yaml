@@ -5,7 +5,11 @@ spring:
 
 event:
   subscription:
+    spatial:
+      publish-radius: 15 # in kms
+      error-rate: 0.1 # out of 1
     max-spatial-radius: 15 # in kms
+
 
 proximity:
   geohash:

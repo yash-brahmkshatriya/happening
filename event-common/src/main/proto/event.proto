@@ -20,14 +20,16 @@ enum EventType {
 }
 
 enum TimestampFilterKey {
-  START = 0;
-  END = 1;
+  UNSPECIFIED_KEY = 0;
+  START = 1;
+  END = 2;
 }
 
 enum TimestampFilterOperator {
-  BEFORE = 0;
-  AFTER = 1;
-  BETWEEN = 2;
+  UNSPECIFIED_OPERATOR = 0;
+  BEFORE = 1;
+  AFTER = 2;
+  BETWEEN = 3;
 }
 
 message Event {

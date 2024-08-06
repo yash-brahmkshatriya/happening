@@ -24,7 +24,7 @@ public class EventSubscriptionService implements SubscriptionService<EventSubscr
     private final double notifyIn;
 
     public EventSubscriptionService(GeoHashProximity geoHashProximity,
-                                    @Value("${event.subscription.max-spatial-radius}") double notifyIn) {
+                                    @Value("${event.subscription.spatial.publish-radius}") double notifyIn) {
         this.proximity = geoHashProximity;
         this.subscribers = new HashMap<>();
         this.notifyIn = notifyIn / Metrics.KILOMETERS.getMultiplier();
