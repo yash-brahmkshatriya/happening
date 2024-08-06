@@ -10,7 +10,7 @@ import ln.dev.geohash.LatLonCoordinate;
 
 public class GeoHashTree<D> {
 
-    public static final int MAX_TREE_HEIGHT = 7;
+    public static final int MAX_TREE_HEIGHT = 6;
 
     private final GeoHashNode<D> root;
 
@@ -21,7 +21,7 @@ public class GeoHashTree<D> {
             throw new IllegalArgumentException("GeoHash Tree levels should be between 0 and " + MAX_TREE_HEIGHT);
 
         this.precision = requiredLevels;
-        this.root = new GeoHashNode<>('*', 0);
+        this.root = new GeoHashNode<>('*', -1);
     }
 
     public GeoHashNode<D> findLCAByGeoHash(String geoHash) {

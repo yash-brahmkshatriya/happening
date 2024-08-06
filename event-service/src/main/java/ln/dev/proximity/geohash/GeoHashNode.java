@@ -32,18 +32,20 @@ public class GeoHashNode<D> {
 
     private final int level;
 
+    private final boolean isLeaf;
+
     public GeoHashNode(char value, int level) {
         this.value = value;
         this.elements = new ArrayList<>();
         this.level = level;
-        boolean isLeaf = this.level == GeoHashTree.MAX_TREE_HEIGHT;
+        this.isLeaf = this.level == GeoHashTree.MAX_TREE_HEIGHT;
         if (isLeaf) this.children = Collections.emptyList();
         else this.children = new ArrayList<>();
     }
 
     public void add(D element, String geoHash) {
         this.elements.add(new GeoHashElement<>(element, geoHash));
-        if (this.elements.size() >= MAX_NODE_CAPACITY) {
+        if (this.elements.size() > MAX_NODE_CAPACITY && !this.isLeaf) {
             this.split();
         }
     }
@@ -55,9 +57,9 @@ public class GeoHashNode<D> {
     public void split() {
         this.elements = this.elements.stream()
                 .filter(elementWithHash -> {
-                    if (this.level == elementWithHash.geoHash.length()) return true;
+                    if (this.level == elementWithHash.geoHash.length() - 1) return true;
 
-                    int nextLevel = level + 1;
+                    int nextLevel = this.level + 1;
                     char nextLevelChar = elementWithHash.geoHash.charAt(nextLevel);
                     Optional<GeoHashNode<D>> optionalChild = this.children.stream()
                             .filter(child -> child.getValue() == nextLevelChar)

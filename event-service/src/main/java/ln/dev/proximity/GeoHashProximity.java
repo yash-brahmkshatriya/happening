@@ -59,7 +59,6 @@ public class GeoHashProximity implements Proximity<Event, String> {
 
     @Override
     public List<String> findAllInProximity(Event publishedEvent, double delta, Metrics metrics) {
-
         int neededPrecision = GeoHash.precisionRequired(delta * metrics.getMultiplier());
         LatLonCoordinate eventLocation = new LatLonCoordinate(publishedEvent.getLocation());
         String geoHashOfEvent = GeoHash.encode(eventLocation, neededPrecision);

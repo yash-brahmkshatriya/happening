@@ -3,6 +3,10 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/happening
 
+event:
+  subscription:
+    max-spatial-radius: 15 # in kms
+
 proximity:
   geohash:
     precision: 6

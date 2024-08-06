@@ -9,6 +9,8 @@ import ln.dev.protos.event.EventStreamFilters;
 import ln.dev.proximity.GeoHashProximity;
 import ln.dev.subscription.model.EventSubscription;
 import ln.dev.util.IdGenerator;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.geo.Metric;
 import org.springframework.data.geo.Metrics;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +20,14 @@ public class EventSubscriptionService implements SubscriptionService<EventSubscr
     private final GeoHashProximity proximity;
     private final Map<String, EventSubscription> subscribers;
 
-    public EventSubscriptionService(GeoHashProximity geoHashProximity) {
+    // Notify in given radians about new published event
+    private final double notifyIn;
+
+    public EventSubscriptionService(GeoHashProximity geoHashProximity,
+                                    @Value("${event.subscription.max-spatial-radius}") double notifyIn) {
         this.proximity = geoHashProximity;
         this.subscribers = new HashMap<>();
+        this.notifyIn = notifyIn / Metrics.KILOMETERS.getMultiplier();
     }
 
     @Override
@@ -47,7 +54,7 @@ public class EventSubscriptionService implements SubscriptionService<EventSubscr
     }
 
     public void publish(Event event) {
-        publish(event, proximity.findAllInProximity(event, 0L, Metrics.KILOMETERS));
+        publish(event, proximity.findAllInProximity(event, this.notifyIn, Metrics.KILOMETERS));
     }
 
     @Override
