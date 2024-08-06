@@ -2,13 +2,12 @@ package ln.dev.subscription;
 
 import com.google.common.eventbus.Subscribe;
 import ln.dev.pojo.EventPojo;
-import ln.dev.proximity.GeoHashProximity;
 import ln.dev.subscription.service.EventSubscriptionService;
 import ln.dev.util.EventConvertor;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HappeningEventListener extends GeoHashProximity {
+public class HappeningEventListener {
 
     private final EventSubscriptionService eventSubscriptionService;
 

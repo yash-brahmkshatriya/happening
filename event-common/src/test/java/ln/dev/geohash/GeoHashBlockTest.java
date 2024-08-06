@@ -1,8 +1,8 @@
 package ln.dev.geohash;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class GeoHashBlockTest {
 

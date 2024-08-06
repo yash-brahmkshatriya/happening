@@ -13,12 +13,13 @@ import org.springframework.data.geo.Metrics;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EventSubscriptionService extends GeoHashProximity
-        implements SubscriptionService<EventSubscription, Event, EventStreamFilters> {
+public class EventSubscriptionService implements SubscriptionService<EventSubscription, Event, EventStreamFilters> {
 
+    private final GeoHashProximity proximity;
     private final Map<String, EventSubscription> subscribers;
 
-    public EventSubscriptionService() {
+    public EventSubscriptionService(GeoHashProximity geoHashProximity) {
+        this.proximity = geoHashProximity;
         this.subscribers = new HashMap<>();
     }
 
@@ -30,7 +31,7 @@ public class EventSubscriptionService extends GeoHashProximity
         EventSubscription subscriber = new EventSubscription(subscriberId, new Date(), filters);
         LatLonCoordinate subscriberLocation =
                 new LatLonCoordinate(filters.getProximityFilter().getLocation());
-        this.subscriberIdTree.add(subscriber.getSubscriptionId(), subscriberLocation);
+        proximity.watch(subscriber.getSubscriptionId(), subscriberLocation);
         this.subscribers.put(subscriber.getSubscriptionId(), subscriber);
         return subscriber;
     }
@@ -46,7 +47,7 @@ public class EventSubscriptionService extends GeoHashProximity
     }
 
     public void publish(Event event) {
-        publish(event, findAllInProximity(event, 0L, Metrics.KILOMETERS));
+        publish(event, proximity.findAllInProximity(event, 0L, Metrics.KILOMETERS));
     }
 
     @Override
@@ -65,7 +66,7 @@ public class EventSubscriptionService extends GeoHashProximity
         if (this.subscribers.containsKey(subscriptionId)) {
             var optionalResponseObserver = this.subscribers.get(subscriptionId).getResponseObserver();
             optionalResponseObserver.ifPresent(StreamObserver::onCompleted);
-            this.subscriberIdTree.remove(
+            proximity.unwatch(
                     subscriptionId, this.subscribers.get(subscriptionId).getLatLonCoordinate());
         }
         this.subscribers.remove(subscriptionId);

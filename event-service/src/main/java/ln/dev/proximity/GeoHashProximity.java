@@ -2,13 +2,14 @@ package ln.dev.proximity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import ln.dev.geohash.Bounds;
 import ln.dev.geohash.GeoHash;
 import ln.dev.geohash.LatLonCoordinate;
 import ln.dev.geohash.Neighbors;
 import ln.dev.protos.event.Event;
 import ln.dev.proximity.geohash.GeoHashTree;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.geo.Metrics;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,10 @@ import org.springframework.stereotype.Component;
 public class GeoHashProximity implements Proximity<Event, String> {
 
     protected GeoHashTree<String> subscriberIdTree;
+
+    public GeoHashProximity(@Value("${proximity.geohash.precision:6}") Integer geoHashPrecision) {
+        this.subscriberIdTree = new GeoHashTree<>(geoHashPrecision);
+    }
 
     private enum Quadrant {
         NORTH_EAST,
@@ -44,6 +49,14 @@ public class GeoHashProximity implements Proximity<Event, String> {
         } else return Quadrant.SOUTH_WEST;
     }
 
+    public void watch(String element, LatLonCoordinate coordinate) {
+        this.subscriberIdTree.add(element, coordinate);
+    }
+
+    public void unwatch(String element, LatLonCoordinate coordinate) {
+        this.subscriberIdTree.remove(element, coordinate);
+    }
+
     @Override
     public List<String> findAllInProximity(Event publishedEvent, double delta, Metrics metrics) {
 
@@ -67,9 +80,16 @@ public class GeoHashProximity implements Proximity<Event, String> {
                     List.of(neighbors.getNorth(), neighbors.getWest(), neighbors.getNorthWest()));
         }
 
-        return neighborsToSearch.stream()
-                .flatMap(
-                        neighborsToSearchHash -> subscriberIdTree.findElementsByGeoHash(neighborsToSearchHash).stream())
-                .collect(Collectors.toList());
+        List<String> elements =
+                subscriberIdTree.findLCAByGeoHash(geoHashOfEvent).getDescendantElements();
+
+        elements.addAll(neighborsToSearch.stream()
+                .flatMap(neighborsToSearchHash -> {
+                    var node = subscriberIdTree.findNodeByGeoHash(neighborsToSearchHash);
+                    if (node.isPresent()) return node.get().getDescendantElements().stream();
+                    else return Stream.empty();
+                })
+                .toList());
+        return elements;
     }
 }
