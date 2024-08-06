@@ -32,7 +32,9 @@ public class LatLonCoordinate {
     public double distanceBetween(LatLonCoordinate other) {
         double deltaLatitude = degreeToRadian(other.latitude - this.latitude);
         double deltaLongitude = degreeToRadian(other.longitude - this.longitude);
-        double a = 1 - Math.cos(deltaLatitude) + Math.cos(this.latitude) * Math.cos(other.latitude) * (1 - Math.cos(deltaLongitude));
+        double a = 1
+                - Math.cos(deltaLatitude)
+                + Math.cos(this.latitude) * Math.cos(other.latitude) * (1 - Math.cos(deltaLongitude));
         return 2 * Math.asin(Math.sqrt(a / 2));
     }
 

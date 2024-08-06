@@ -42,7 +42,7 @@ public class EventSubscription extends Subscription<Event, EventStreamFilters> {
         LatLonCoordinate p2 = new LatLonCoordinate(publishedEventCoordinate);
         double distanceInRadians = p1.distanceBetween(p2);
         double distanceInKms = distanceInRadians * Metrics.KILOMETERS.getMultiplier();
-        return (proximityFilter.getLocationRadius() - distanceInKms)<= distanceInKms * spatialErrorRate;
+        return (proximityFilter.getLocationRadius() - distanceInKms) <= distanceInKms * spatialErrorRate;
     }
 
     public boolean applyNameFilter(String subscribedFilterName, String publishedEventName) {
@@ -54,11 +54,14 @@ public class EventSubscription extends Subscription<Event, EventStreamFilters> {
         return subscribedTypes.isEmpty() || subscribedTypes.contains(publishedType);
     }
 
-    public boolean applyDateFilter(TimestampFilter subscribedTimestampFilter, Event publishedEvent) throws ParseException {
-        if(subscribedTimestampFilter.getTimestampFilterKey().equals(TimestampFilterKey.UNSPECIFIED_KEY) ||
-                subscribedTimestampFilter.getTimestampFilterOperator().equals(TimestampFilterOperator.UNSPECIFIED_OPERATOR) ||
-                subscribedTimestampFilter.getTimestamp().isEmpty() || subscribedTimestampFilter.getTimestamp2().isEmpty()
-        ) {
+    public boolean applyDateFilter(TimestampFilter subscribedTimestampFilter, Event publishedEvent)
+            throws ParseException {
+        if (subscribedTimestampFilter.getTimestampFilterKey().equals(TimestampFilterKey.UNSPECIFIED_KEY)
+                || subscribedTimestampFilter
+                        .getTimestampFilterOperator()
+                        .equals(TimestampFilterOperator.UNSPECIFIED_OPERATOR)
+                || subscribedTimestampFilter.getTimestamp().isEmpty()
+                || subscribedTimestampFilter.getTimestamp2().isEmpty()) {
             return true;
         }
         Date filterBasedOnDate;
@@ -75,7 +78,8 @@ public class EventSubscription extends Subscription<Event, EventStreamFilters> {
             }
             case BETWEEN -> {
                 return filterBasedOnDate.after(EventConvertor.parseISODate(subscribedTimestampFilter.getTimestamp()))
-                        && filterBasedOnDate.before(EventConvertor.parseISODate(subscribedTimestampFilter.getTimestamp2()));
+                        && filterBasedOnDate.before(
+                                EventConvertor.parseISODate(subscribedTimestampFilter.getTimestamp2()));
             }
             default -> {
                 return false;

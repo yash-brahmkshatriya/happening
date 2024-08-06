@@ -10,7 +10,6 @@ import ln.dev.proximity.GeoHashProximity;
 import ln.dev.subscription.model.EventSubscription;
 import ln.dev.util.IdGenerator;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.geo.Metric;
 import org.springframework.data.geo.Metrics;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +22,8 @@ public class EventSubscriptionService implements SubscriptionService<EventSubscr
     // Notify in given radians about new published event
     private final double notifyIn;
 
-    public EventSubscriptionService(GeoHashProximity geoHashProximity,
-                                    @Value("${event.subscription.spatial.publish-radius}") double notifyIn) {
+    public EventSubscriptionService(
+            GeoHashProximity geoHashProximity, @Value("${event.subscription.spatial.publish-radius}") double notifyIn) {
         this.proximity = geoHashProximity;
         this.subscribers = new HashMap<>();
         this.notifyIn = notifyIn / Metrics.KILOMETERS.getMultiplier();
