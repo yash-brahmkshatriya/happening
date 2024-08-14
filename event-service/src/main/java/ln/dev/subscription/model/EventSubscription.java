@@ -10,7 +10,6 @@ import ln.dev.protos.coordinate.Coordinate;
 import ln.dev.protos.event.*;
 import ln.dev.util.EventConvertor;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.geo.Metrics;
 import org.springframework.util.Assert;
 

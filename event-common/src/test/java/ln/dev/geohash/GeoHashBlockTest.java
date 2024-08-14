@@ -9,8 +9,8 @@ class GeoHashBlockTest {
     @Test
     void move() {
         GeoHashBlock block = new GeoHashBlock(0, 3);
-        assertEquals(new GeoHashBlock(0, 4), block.createCopy().move(1, Direction.EAST));
-        assertEquals(new GeoHashBlock(0, 2), block.createCopy().move(1, Direction.WEST));
+        assertEquals(new GeoHashBlock(0, 0), block.createCopy().move(5, Direction.EAST));
+        assertEquals(new GeoHashBlock(0, 7), block.createCopy().move(4, Direction.WEST));
         assertEquals(new GeoHashBlock(3, 3), block.createCopy().move(1, Direction.NORTH));
         assertEquals(new GeoHashBlock(1, 3), block.createCopy().move(1, Direction.SOUTH));
     }
