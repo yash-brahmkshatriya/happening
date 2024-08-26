@@ -17,5 +17,6 @@ public class EventEntityMongoListener extends AbstractMongoEventListener<EventPo
     @Override
     public void onAfterSave(AfterSaveEvent<EventPojo> event) {
         happeningEventPublisher.publishEvent(event.getSource());
+        super.onAfterSave(event);
     }
 }
