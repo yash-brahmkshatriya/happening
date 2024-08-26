@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import ln.dev.constants.MongoFieldNames;
 import ln.dev.protos.event.*;
 import ln.dev.util.EventConvertor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EventCriteriaBuilder {
 
-    private Optional<Criteria> timestampFilterCriteria(TimestampFilter timestampFilter) throws ParseException {
+    protected Optional<Criteria> timestampFilterCriteria(TimestampFilter timestampFilter) throws ParseException {
         String timestampFilterKey = timestampFilter.getTimestampFilterKey().equals(TimestampFilterKey.START)
                 ? MongoFieldNames.Event.START_TIMESTAMP
                 : MongoFieldNames.Event.END_TIMESTAMP;
@@ -31,19 +32,19 @@ public class EventCriteriaBuilder {
             case BETWEEN -> timestampCriteria
                     .gt(EventConvertor.parseISODate(timestampFilter.getTimestamp()))
                     .lt(EventConvertor.parseISODate(timestampFilter.getTimestamp2()));
-            case UNRECOGNIZED -> {
+            case UNSPECIFIED_OPERATOR, UNRECOGNIZED -> {
                 return Optional.empty();
             }
         }
         return Optional.of(timestampCriteria);
     }
 
-    private Optional<Criteria> eventTypeCriteriaBuilder(List<EventType> eventTypeList) {
+    protected Optional<Criteria> eventTypeCriteriaBuilder(List<EventType> eventTypeList) {
         if (eventTypeList.isEmpty()) return Optional.empty();
         return Optional.of(Criteria.where(MongoFieldNames.Event.TYPE).in(eventTypeList));
     }
 
-    private Optional<Criteria> eventNameCriteriaBuilder(String eventName) {
+    protected Optional<Criteria> eventNameCriteriaBuilder(@NotNull String eventName) {
         if (eventName.isEmpty()) return Optional.empty();
         return Optional.of(
                 Criteria.where(MongoFieldNames.Event.NAME).regex(Pattern.compile(eventName, Pattern.CASE_INSENSITIVE)));

@@ -1,12 +1,10 @@
 package ln.dev.geohash;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.text.DecimalFormat;
 import ln.dev.protos.coordinate.Coordinate;
 import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class LatLonCoordinateTest {
 
@@ -27,10 +25,8 @@ class LatLonCoordinateTest {
 
     @Test
     void protoBasedConstructor() {
-        Coordinate coordinate = Coordinate.newBuilder()
-                .setLatitude(1.234)
-                .setLongitude(4.567)
-                .build();
+        Coordinate coordinate =
+                Coordinate.newBuilder().setLatitude(1.234).setLongitude(4.567).build();
         LatLonCoordinate latLonCoordinate = new LatLonCoordinate(coordinate);
         assertEquals(coordinate.getLatitude(), latLonCoordinate.getLatitude());
         assertEquals(coordinate.getLongitude(), latLonCoordinate.getLongitude());

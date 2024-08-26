@@ -1,7 +1,6 @@
 package ln.dev.geohash;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 
 @Getter

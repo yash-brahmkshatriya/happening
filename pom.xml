@@ -49,6 +49,8 @@
                         <exclude>ln/dev/protos/**/*</exclude>
                         <exclude>ln/dev/grpc/**/*</exclude>
                         <exclude>ln/dev/common/*</exclude>
+                        <exclude>ln/dev/pojo/**/*</exclude>
+                        <exclude>ln/dev/constants/**/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

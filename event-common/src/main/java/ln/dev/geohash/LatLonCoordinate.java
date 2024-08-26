@@ -4,7 +4,6 @@ import ln.dev.protos.coordinate.Coordinate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Builder
