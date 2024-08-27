@@ -18,6 +18,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class EventCriteriaBuilder {
 
+    /**
+     * Builds criteria for timestamp
+     * @param timestampFilter Given filter
+     * @return Optional Criteria
+     * @throws ParseException if invalid date
+     */
     protected Optional<Criteria> timestampFilterCriteria(TimestampFilter timestampFilter) throws ParseException {
         String timestampFilterKey = timestampFilter.getTimestampFilterKey().equals(TimestampFilterKey.START)
                 ? MongoFieldNames.Event.START_TIMESTAMP
@@ -39,17 +45,32 @@ public class EventCriteriaBuilder {
         return Optional.of(timestampCriteria);
     }
 
+    /**
+     * Builds criteria for Event type
+     * @param eventTypeList event type list for filtering
+     * @return Optional criteria
+     */
     protected Optional<Criteria> eventTypeCriteriaBuilder(List<EventType> eventTypeList) {
         if (eventTypeList.isEmpty()) return Optional.empty();
         return Optional.of(Criteria.where(MongoFieldNames.Event.TYPE).in(eventTypeList));
     }
 
+    /**
+     * Builds criteria for event name
+     * @param eventName event name for filtering
+     * @return Optional criteria
+     */
     protected Optional<Criteria> eventNameCriteriaBuilder(@NotNull String eventName) {
         if (eventName.isEmpty()) return Optional.empty();
         return Optional.of(
                 Criteria.where(MongoFieldNames.Event.NAME).regex(Pattern.compile(eventName, Pattern.CASE_INSENSITIVE)));
     }
 
+    /**
+     * Builds complete filter criteria
+     * @param eventStreamFilters Event filters
+     * @return Criteria
+     */
     public Criteria buildFilterCriterias(EventStreamFilters eventStreamFilters) {
         try {
             Optional<Criteria> eventTypeCriteria = eventTypeCriteriaBuilder(eventStreamFilters.getTypeList());
@@ -68,6 +89,11 @@ public class EventCriteriaBuilder {
         }
     }
 
+    /**
+     * Builds NearQuery with given proximity filter
+     * @param proximityFilter Proximity Filters
+     * @return Built NearQuery
+     */
     public NearQuery buildNearQuery(ProximityFilter proximityFilter) {
         Point locationPoint = new Point(
                 proximityFilter.getLocation().getLongitude(),

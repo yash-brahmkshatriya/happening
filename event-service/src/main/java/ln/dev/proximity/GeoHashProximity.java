@@ -31,6 +31,12 @@ public class GeoHashProximity implements Proximity<Event, String> {
         SOUTH_WEST;
     }
 
+    /**
+     * Finds quadrant in which the given point lies when that bounds is divided into 4 quadrants
+     * @param hashBounds Bounds of current block
+     * @param point location
+     * @return Quadrant
+     */
     private Quadrant findQuadrant(Bounds hashBounds, LatLonCoordinate point) {
         LatLonCoordinate centerOfBound = new LatLonCoordinate(
                 (hashBounds.getSouthEast().getLatitude()
@@ -51,14 +57,31 @@ public class GeoHashProximity implements Proximity<Event, String> {
         } else return Quadrant.SOUTH_WEST;
     }
 
+    /**
+     * Adds to subscriber list
+     * @param element Element to add
+     * @param coordinate coordinate of element
+     */
     public void watch(String element, LatLonCoordinate coordinate) {
         this.subscriberIdTree.add(element, coordinate);
     }
 
+    /**
+     * Removes from subscriber list
+     * @param element Element to remove
+     * @param coordinate coordinate of element
+     */
     public void unwatch(String element, LatLonCoordinate coordinate) {
         this.subscriberIdTree.remove(element, coordinate);
     }
 
+    /**
+     * Finds all the subscribers in given proximity
+     * @param publishedEvent Event in whose proximity, subscribers will be found
+     * @param delta Radius to publish
+     * @param metrics Metric
+     * @return List of subscribers who are in proximity
+     */
     @Override
     public List<String> findAllInProximity(Event publishedEvent, double delta, Metrics metrics) {
         int neededPrecision = GeoHash.precisionRequired(delta * metrics.getMultiplier());

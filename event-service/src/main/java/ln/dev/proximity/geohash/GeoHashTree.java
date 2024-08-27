@@ -67,15 +67,30 @@ public class GeoHashTree<D> {
         else return Optional.empty();
     }
 
+    /**
+     * Adds the element to the tree
+     * @param element Element to add
+     * @param coordinate coordinate of element
+     */
     public void add(D element, LatLonCoordinate coordinate) {
         String geoHash = GeoHash.encode(coordinate, this.precision);
         add(element, geoHash);
     }
 
+    /**
+     * Adds the element to the tree
+     * @param element Element to add
+     * @param geoHash geohash of element
+     */
     public void add(D element, String geoHash) {
         findLCAByGeoHash(geoHash).add(element, geoHash);
     }
 
+    /**
+     * Removes the element from tree
+     * @param element Element to remove
+     * @param coordinate coordinate of element
+     */
     public void remove(D element, LatLonCoordinate coordinate) {
         String geoHash = GeoHash.encode(coordinate, this.precision);
         findLCAByGeoHash(geoHash).remove(element);

@@ -23,10 +23,20 @@ public class LatLonCoordinate {
         this.longitude = coordinate.getLongitude();
     }
 
+    /**
+     * Converts Angle from degree to radian
+     * @param degree Degree
+     * @return Radian
+     */
     private double degreeToRadian(double degree) {
         return degree * (Math.PI / 180);
     }
 
+    /**
+     * Calculate radian distance between two points using Haversine formula
+     * @param other Other location
+     * @return distance in radians
+     */
     public double distanceBetween(LatLonCoordinate other) {
         double deltaLatitude = degreeToRadian(other.latitude - this.latitude);
         double deltaLongitude = degreeToRadian(other.longitude - this.longitude);
