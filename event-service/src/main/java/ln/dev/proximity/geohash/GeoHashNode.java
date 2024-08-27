@@ -42,6 +42,11 @@ public class GeoHashNode<D> {
         else this.children = new ArrayList<>();
     }
 
+    /**
+     * Adds element to node
+     * @param element Element
+     * @param geoHash GeoHash of element
+     */
     public void add(D element, String geoHash) {
         this.elements.add(new ElementWithHash<>(element, geoHash));
         if (this.elements.size() > capacity && !this.isLeaf) {
@@ -49,10 +54,17 @@ public class GeoHashNode<D> {
         }
     }
 
+    /**
+     * Removes element from node
+     * @param element Element to remove
+     */
     public void remove(D element) {
         this.elements.removeIf((ele) -> ele.element == element);
     }
 
+    /**
+     * Splits the node into children based on their geohash value
+     */
     public void split() {
         this.elements = this.elements.stream()
                 .filter(elementWithHash -> {
@@ -71,12 +83,18 @@ public class GeoHashNode<D> {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * @return elements of the node
+     */
     public List<D> getElements() {
         return this.elements.stream()
                 .map(elementWithHash -> elementWithHash.element)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * @return elements of the node and all the descendants of it
+     */
     public List<D> getDescendantElements() {
         List<D> elements = this.elements.stream()
                 .map(elementWithHash -> elementWithHash.element)

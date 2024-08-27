@@ -22,6 +22,11 @@ public class CustomEventRepositoryImpl implements CustomEventRepository {
         this.eventCriteriaBuilder = eventCriteriaBuilder;
     }
 
+    /**
+     * Finds events by given filters
+     * @param eventFilters Event filters
+     * @return List of events
+     */
     @Override
     public List<EventPojo> findByEventFilters(EventStreamFilters eventFilters) {
         NearQuery nearQuery = eventCriteriaBuilder

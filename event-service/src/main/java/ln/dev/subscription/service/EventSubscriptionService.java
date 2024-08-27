@@ -29,6 +29,12 @@ public class EventSubscriptionService implements SubscriptionService<EventSubscr
         this.notifyIn = notifyIn / Metrics.KILOMETERS.getMultiplier();
     }
 
+    /**
+     * Register the subscription with given filters and observer
+     * @param filters
+     * @param responseObserver
+     * @return EventSubscription
+     */
     @Override
     public EventSubscription subscribe(
             EventStreamFilters filters, StreamObserver<ClientSubscription> responseObserver) {
@@ -42,6 +48,11 @@ public class EventSubscriptionService implements SubscriptionService<EventSubscr
         return subscriber;
     }
 
+    /**
+     * Listen to subscription already registered
+     * @param subscriptionId
+     * @param responseObserver
+     */
     @Override
     public void listenSubscription(String subscriptionId, StreamObserver<Event> responseObserver) {
         if (this.subscribers.containsKey(subscriptionId)) {
@@ -52,10 +63,19 @@ public class EventSubscriptionService implements SubscriptionService<EventSubscr
         // TODO: write else path
     }
 
+    /**
+     * Publish given event to all subscribers in proximity
+     * @param event
+     */
     public void publish(Event event) {
         publish(event, proximity.findAllInProximity(event, this.notifyIn, Metrics.KILOMETERS));
     }
 
+    /**
+     * Publish given event to all given subscriber Ids
+     * @param event
+     * @param subscriberIds
+     */
     @Override
     public void publish(Event event, List<String> subscriberIds) {
         subscriberIds.stream()
@@ -67,6 +87,10 @@ public class EventSubscriptionService implements SubscriptionService<EventSubscr
                         optionalStreamObserver -> optionalStreamObserver.ifPresent(observer -> observer.onNext(event)));
     }
 
+    /**
+     * Unsubscribes with given subscription id
+     * @param subscriptionId
+     */
     @Override
     public void unsubscribe(String subscriptionId) {
         if (this.subscribers.containsKey(subscriptionId)) {

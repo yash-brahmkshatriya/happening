@@ -25,12 +25,21 @@ public class EventSubscription extends Subscription<Event, EventStreamFilters> {
         this.updateRequestData(subscriptionRequestFilters);
     }
 
+    /**
+     * Updates the request data
+     */
     public void updateRequestData(EventStreamFilters eventStreamFilters) {
         this.latLonCoordinate =
                 new LatLonCoordinate(eventStreamFilters.getProximityFilter().getLocation());
         super.updateRequestData(eventStreamFilters);
     }
 
+    /**
+     * Apply proximity filtering to published event
+     * @param proximityFilter
+     * @param publishedEventCoordinate
+     * @return True if subscriber is in proximity of published event
+     */
     public boolean applyProximityFilter(ProximityFilter proximityFilter, Coordinate publishedEventCoordinate) {
         LatLonCoordinate p1 = new LatLonCoordinate(proximityFilter.getLocation());
         LatLonCoordinate p2 = new LatLonCoordinate(publishedEventCoordinate);
@@ -39,15 +48,33 @@ public class EventSubscription extends Subscription<Event, EventStreamFilters> {
         return distanceInKms <= proximityFilter.getLocationRadius();
     }
 
+    /**
+     * Apply Name filtering
+     * @param subscribedFilterName
+     * @param publishedEventName
+     * @return True if subscriber's name filter matches published event's name
+     */
     public boolean applyNameFilter(String subscribedFilterName, String publishedEventName) {
         Pattern pattern = Pattern.compile(subscribedFilterName, Pattern.CASE_INSENSITIVE);
         return subscribedFilterName.isEmpty() || publishedEventName.matches(pattern.pattern());
     }
 
+    /**
+     * Apply Type filtering
+     * @param subscribedTypes
+     * @param publishedType
+     * @return True if subscriber's type filters matches published event's type
+     */
     public boolean applyTypeFilter(List<EventType> subscribedTypes, EventType publishedType) {
         return subscribedTypes.isEmpty() || subscribedTypes.contains(publishedType);
     }
 
+    /**
+     * @param subscribedTimestampFilter
+     * @param publishedEvent
+     * @return True if subscriber's timestamp filter passes published event's timestamps
+     * @throws ParseException if invalid date
+     */
     public boolean applyDateFilter(TimestampFilter subscribedTimestampFilter, Event publishedEvent)
             throws ParseException {
         if (subscribedTimestampFilter.getTimestampFilterKey().equals(TimestampFilterKey.UNSPECIFIED_KEY)
