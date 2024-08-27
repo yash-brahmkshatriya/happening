@@ -21,25 +21,20 @@ public class SubscriptionServiceGrpcImpl extends SubscriptionServiceGrpc.Subscri
     }
 
     @Override
-    public void subscribeToEvents(EventSubscriptionRequest request, StreamObserver<ClientSubscription> responseObserver) {
-        EventSubscription eventSubscription = eventSubscriptionService.subscribe(
-                request.getFilters(), responseObserver
-        );
-        responseObserver.onNext(
-                ClientSubscription.newBuilder()
-                        .setSubscriptionId(eventSubscription.getSubscriptionId())
-                        .setTimestamp(EventConvertor.formatISODate(eventSubscription.getTimestamp()))
-                        .build()
-        );
+    public void subscribeToEvents(
+            EventSubscriptionRequest request, StreamObserver<ClientSubscription> responseObserver) {
+        EventSubscription eventSubscription =
+                eventSubscriptionService.subscribe(request.getFilters(), responseObserver);
+        responseObserver.onNext(ClientSubscription.newBuilder()
+                .setSubscriptionId(eventSubscription.getSubscriptionId())
+                .setTimestamp(EventConvertor.formatISODate(eventSubscription.getTimestamp()))
+                .build());
         responseObserver.onCompleted();
     }
 
     @Override
     public void listenSubscription(ClientSubscription request, StreamObserver<Event> responseObserver) {
-        eventSubscriptionService.listenSubscription(
-                request.getSubscriptionId(),
-                responseObserver
-        );
+        eventSubscriptionService.listenSubscription(request.getSubscriptionId(), responseObserver);
     }
 
     @Override

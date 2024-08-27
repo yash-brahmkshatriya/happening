@@ -1,10 +1,9 @@
 package ln.dev.subscription.model;
 
 import io.grpc.stub.StreamObserver;
-import lombok.*;
-
 import java.util.Date;
 import java.util.Optional;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -25,5 +24,4 @@ public abstract class Subscription<G, T> {
     public void updateRequestData(T requestData) {
         this.requestData = Optional.of(requestData);
     }
-
 }

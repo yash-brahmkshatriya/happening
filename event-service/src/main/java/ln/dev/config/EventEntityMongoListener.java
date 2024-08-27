@@ -6,8 +6,6 @@ import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventLis
 import org.springframework.data.mongodb.core.mapping.event.AfterSaveEvent;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 @Component
 public class EventEntityMongoListener extends AbstractMongoEventListener<EventPojo> {
     private final HappeningEventPublisher happeningEventPublisher;
@@ -16,9 +14,9 @@ public class EventEntityMongoListener extends AbstractMongoEventListener<EventPo
         this.happeningEventPublisher = happeningEventPublisher;
     }
 
-
     @Override
     public void onAfterSave(AfterSaveEvent<EventPojo> event) {
         happeningEventPublisher.publishEvent(event.getSource());
+        super.onAfterSave(event);
     }
 }

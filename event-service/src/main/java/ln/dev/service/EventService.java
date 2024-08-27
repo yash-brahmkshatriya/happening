@@ -1,11 +1,11 @@
 package ln.dev.service;
 
+import java.util.List;
 import ln.dev.pojo.EventPojo;
 import ln.dev.protos.event.EventStreamFilters;
 import ln.dev.repository.EventRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class EventService {
@@ -16,7 +16,7 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public EventPojo createEvent(EventPojo eventPojo) {
+    public EventPojo createEvent(@NotNull EventPojo eventPojo) {
         eventPojo.setId(null);
         return eventRepository.save(eventPojo);
     }
@@ -25,5 +25,4 @@ public class EventService {
     public List<EventPojo> findByFilters(EventStreamFilters eventStreamFilters) {
         return eventRepository.findByEventFilters(eventStreamFilters);
     }
-
 }

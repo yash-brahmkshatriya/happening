@@ -1,15 +1,14 @@
 package ln.dev.pojo;
 
+import java.util.Date;
 import ln.dev.constants.MongoFieldNames;
-import lombok.*;
 import ln.dev.protos.event.EventType;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
-
-import java.util.Date;
 
 @Data
 @SuperBuilder(toBuilder = true)
@@ -39,5 +38,4 @@ public class EventPojo extends BasePojo {
 
     @Field(MongoFieldNames.Event.LOCATION)
     private Location location;
-    
 }

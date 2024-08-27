@@ -1,9 +1,9 @@
-package geohash;
-
-import ln.dev.geohash.Base32;
-import org.junit.jupiter.api.Test;
+package ln.dev.geohash;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.stream.Collectors;
+import org.junit.jupiter.api.Test;
 
 class Base32Test {
 
@@ -31,7 +31,24 @@ class Base32Test {
     }
 
     @Test
-    void getCharNumberWithInvalidInput(){
+    void getCharNumberWithInvalidInput() {
         assertThrows(IllegalArgumentException.class, () -> Base32.getCharNumber('a'));
+    }
+
+    @Test
+    void validBase32String() {
+        assertTrue(Base32.isValidBase32String("0b"));
+    }
+
+    @Test
+    void invalidBase32String() {
+        assertFalse(Base32.isValidBase32String("a0bi"));
+    }
+
+    @Test
+    void getBase32Characters() {
+        assertEquals(
+                "0123456789bcdefghjkmnpqrstuvwxyz",
+                Base32.getBase32Characters().stream().map(String::valueOf).collect(Collectors.joining()));
     }
 }

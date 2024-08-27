@@ -1,12 +1,15 @@
 package ln.dev.geohash;
 
+import org.jetbrains.annotations.NotNull;
+
 public enum Direction {
     NORTH,
     SOUTH,
     WEST,
-    EAST;
+    EAST,
+    NA;
 
-    public static Direction getComplementDirection(Direction direction) {
+    public static Direction getComplementDirection(@NotNull Direction direction) {
         switch (direction) {
             case EAST -> {
                 return Direction.NORTH;
@@ -20,9 +23,7 @@ public enum Direction {
             case SOUTH -> {
                 return Direction.WEST;
             }
-            default -> {
-                return null;
-            }
         }
+        return Direction.NA;
     }
 }

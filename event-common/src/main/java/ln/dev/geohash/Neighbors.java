@@ -2,12 +2,10 @@ package ln.dev.geohash;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@Data
+@Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class Neighbors {
     private String north;

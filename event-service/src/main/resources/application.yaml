@@ -2,3 +2,19 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/happening
+
+event:
+  subscription:
+    spatial:
+      publish-radius: 15 # in kms
+
+
+proximity:
+  geohash:
+    precision: 6
+    node:
+      capacity: 1000
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG

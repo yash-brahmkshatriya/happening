@@ -1,11 +1,10 @@
 package ln.dev.config;
 
+import java.util.Date;
 import ln.dev.pojo.BasePojo;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 @Component
 public class MongoListener extends AbstractMongoEventListener<BasePojo> {
