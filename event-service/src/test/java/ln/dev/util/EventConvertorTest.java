@@ -1,5 +1,11 @@
 package ln.dev.util;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import ln.dev.pojo.EventPojo;
 import ln.dev.pojo.Location;
 import ln.dev.protos.coordinate.Coordinate;
@@ -7,13 +13,6 @@ import ln.dev.protos.event.Event;
 import ln.dev.protos.event.EventType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class EventConvertorTest {
 
@@ -28,7 +27,7 @@ class EventConvertorTest {
     Event defaultEventProto;
 
     @BeforeEach
-    void setDefaults() throws ParseException{
+    void setDefaults() throws ParseException {
         Date date = simpleDateFormat.parse(dateStr);
 
         defaultEventPojo = EventPojo.builder()
@@ -38,12 +37,10 @@ class EventConvertorTest {
                 .description(desc)
                 .startTimestamp(simpleDateFormat.parse(dateStr))
                 .endTimestamp(simpleDateFormat.parse(dateStr))
-                .location(
-                        Location.builder()
-                                .type("Point")
-                                .coordinates(List.of(lon, lat))
-                                .build()
-                )
+                .location(Location.builder()
+                        .type("Point")
+                        .coordinates(List.of(lon, lat))
+                        .build())
                 .build();
 
         defaultEventProto = Event.newBuilder()
@@ -67,37 +64,29 @@ class EventConvertorTest {
     }
 
     @Test
-    void formatISODate() throws ParseException{
+    void formatISODate() throws ParseException {
         Date date = simpleDateFormat.parse(dateStr);
         assertEquals(dateStr, EventConvertor.formatISODate(date));
     }
 
     @Test
     void locationConvert() {
-        Coordinate coordinate = Coordinate.newBuilder()
-                .setLatitude(lat)
-                .setLongitude(lon)
-                .build();
+        Coordinate coordinate =
+                Coordinate.newBuilder().setLatitude(lat).setLongitude(lon).build();
 
-        Location location = Location.builder()
-                .coordinates(List.of(lon, lat))
-                .type("Point")
-                .build();
+        Location location =
+                Location.builder().coordinates(List.of(lon, lat)).type("Point").build();
 
         assertEquals(location, EventConvertor.convert(coordinate));
     }
 
     @Test
     void coordinateConvert() {
-        Location location = Location.builder()
-                .coordinates(List.of(lon, lat))
-                .type("Point")
-                .build();
+        Location location =
+                Location.builder().coordinates(List.of(lon, lat)).type("Point").build();
 
-        Coordinate coordinate = Coordinate.newBuilder()
-                .setLatitude(lat)
-                .setLongitude(lon)
-                .build();
+        Coordinate coordinate =
+                Coordinate.newBuilder().setLatitude(lat).setLongitude(lon).build();
 
         assertEquals(coordinate, EventConvertor.convert(location));
     }
@@ -105,7 +94,6 @@ class EventConvertorTest {
     @Test
     void eventPojoConvert() throws ParseException {
         assertEquals(defaultEventPojo, EventConvertor.convert(defaultEventProto));
-
     }
 
     @Test

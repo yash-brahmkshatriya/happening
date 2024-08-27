@@ -6,24 +6,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Value;
 
 public class GeoHashNode<D> {
     @AllArgsConstructor
-    private static class GeoHashElement<D> {
+    private static class ElementWithHash<D> {
         D element;
         String geoHash;
     }
 
-    @Value("${proximity.geohash.node.capacity:1000}")
-    private int MAX_NODE_CAPACITY;
-
     @Getter(AccessLevel.PUBLIC)
-    private char value;
+    private final char value;
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private List<GeoHashElement<D>> elements;
+    private List<ElementWithHash<D>> elements;
 
     @Getter(AccessLevel.PUBLIC)
     @Setter(AccessLevel.NONE)
@@ -34,18 +30,21 @@ public class GeoHashNode<D> {
 
     private final boolean isLeaf;
 
-    public GeoHashNode(char value, int level) {
+    private final int capacity;
+
+    public GeoHashNode(char value, int level, int capacity) {
         this.value = value;
         this.elements = new ArrayList<>();
         this.level = level;
+        this.capacity = capacity;
         this.isLeaf = this.level == GeoHashTree.MAX_TREE_HEIGHT;
         if (isLeaf) this.children = Collections.emptyList();
         else this.children = new ArrayList<>();
     }
 
     public void add(D element, String geoHash) {
-        this.elements.add(new GeoHashElement<>(element, geoHash));
-        if (this.elements.size() > MAX_NODE_CAPACITY && !this.isLeaf) {
+        this.elements.add(new ElementWithHash<>(element, geoHash));
+        if (this.elements.size() > capacity && !this.isLeaf) {
             this.split();
         }
     }
@@ -64,7 +63,7 @@ public class GeoHashNode<D> {
                     Optional<GeoHashNode<D>> optionalChild = this.children.stream()
                             .filter(child -> child.getValue() == nextLevelChar)
                             .findFirst();
-                    GeoHashNode<D> child = optionalChild.orElse(new GeoHashNode<>(nextLevelChar, nextLevel));
+                    GeoHashNode<D> child = optionalChild.orElse(new GeoHashNode<>(nextLevelChar, nextLevel, capacity));
                     if (optionalChild.isEmpty()) this.children.add(child);
                     child.add(elementWithHash.element, elementWithHash.geoHash);
                     return false;

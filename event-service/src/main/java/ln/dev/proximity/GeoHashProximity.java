@@ -18,8 +18,10 @@ public class GeoHashProximity implements Proximity<Event, String> {
 
     protected GeoHashTree<String> subscriberIdTree;
 
-    public GeoHashProximity(@Value("${proximity.geohash.precision:6}") Integer geoHashPrecision) {
-        this.subscriberIdTree = new GeoHashTree<>(geoHashPrecision);
+    public GeoHashProximity(
+            @Value("${proximity.geohash.precision:6}") Integer geoHashPrecision,
+            @Value("${proximity.geohash.node.capacity:1000}") Integer maxNodeCapacity) {
+        this.subscriberIdTree = new GeoHashTree<>(geoHashPrecision, maxNodeCapacity);
     }
 
     private enum Quadrant {

@@ -1,18 +1,15 @@
 package ln.dev.proximity.geohash;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
-
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 // TODO: update class to use test properties
 class GeoHashNodeTest {
 
     @Test
     void add() {
-        GeoHashNode<Integer> geoHashNode = new GeoHashNode<>('$', 0);
-        ReflectionTestUtils.setField(geoHashNode, "MAX_NODE_CAPACITY", 1);
-
+        GeoHashNode<Integer> geoHashNode = new GeoHashNode<>('$', 0, 1);
         geoHashNode.add(1, "0");
         assertEquals(1, geoHashNode.getElements().size());
 
@@ -23,8 +20,7 @@ class GeoHashNodeTest {
 
     @Test
     void remove() {
-        GeoHashNode<Integer> geoHashNode = new GeoHashNode<>('$', 0);
-        ReflectionTestUtils.setField(geoHashNode, "MAX_NODE_CAPACITY", 3);
+        GeoHashNode<Integer> geoHashNode = new GeoHashNode<>('$', 0, 3);
         geoHashNode.add(5, "01");
         geoHashNode.add(10, "01");
         geoHashNode.add(5, "01b");
@@ -34,8 +30,7 @@ class GeoHashNodeTest {
 
     @Test
     void split() {
-        GeoHashNode<Integer> geoHashNode = new GeoHashNode<>('$', 0);
-        ReflectionTestUtils.setField(geoHashNode, "MAX_NODE_CAPACITY", 5);
+        GeoHashNode<Integer> geoHashNode = new GeoHashNode<>('$', 0, 5);
         geoHashNode.add(5, "0");
         geoHashNode.add(10, "01");
         geoHashNode.add(10, "02");
