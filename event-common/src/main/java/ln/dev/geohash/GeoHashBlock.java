@@ -15,6 +15,12 @@ public class GeoHashBlock extends Pair<Integer, Integer> {
         super(row, col);
     }
 
+    /**
+     * Moves the current block
+     * @param blocks number of positions to move
+     * @param direction direction to move
+     * @return mutated block with moved position
+     */
     public GeoHashBlock move(int blocks, Direction direction) {
         switch (direction) {
             case EAST -> this.setSecond((this.getSecond() + (blocks % EW_BLOCKS)) % EW_BLOCKS);
@@ -25,6 +31,11 @@ public class GeoHashBlock extends Pair<Integer, Integer> {
         return this;
     }
 
+    /**
+     * Checks if Boundary is crossed of current level while moving
+     * @param direction Direction to move
+     * @return True if it crosses
+     */
     public boolean doesItCrossBoundaryWileMoving(Direction direction) {
         switch (direction) {
             case WEST -> {
@@ -43,6 +54,10 @@ public class GeoHashBlock extends Pair<Integer, Integer> {
         return false;
     }
 
+    /**
+     * Creates copy of given block
+     * @return Copy of Block
+     */
     public GeoHashBlock createCopy() {
         return new GeoHashBlock(this.getFirst(), this.getSecond());
     }

@@ -21,16 +21,29 @@ public class Base32 {
         for (char c : base32Characters) charToNumberMap.put(c, i++);
     }
 
+    /**
+     * @return List of valid Base32 characters of geohash
+     */
     public static List<Character> getBase32Characters() {
         return IntStream.range(0, base32Characters.length)
                 .mapToObj(i -> base32Characters[i])
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Checks if given character is valid base32 char of geohash
+     * @param ch character to check
+     * @return True if it is valid base32 geohash character
+     */
     public static boolean isBase32Char(char ch) {
         return charToNumberMap.containsKey(ch);
     }
 
+    /**
+     * Checks if the given Base32 string contains valid characters
+     * @param s string to check
+     * @return True if all characters of string are valid base32 characters
+     */
     public static boolean isValidBase32String(String s) {
         return IntStream.range(0, s.length())
                 .mapToObj(s::charAt)
@@ -38,6 +51,11 @@ public class Base32 {
                 .reduce(true, (acc, curr) -> acc && curr);
     }
 
+    /**
+     * Encodes Decimal geohash to Base32
+     * @param decimalGeoHash decimal representation of geohash
+     * @return Base32 representation of geohash
+     */
     public static String encode(Long decimalGeoHash) {
         StringBuilder base32GeoHash = new StringBuilder();
         while (decimalGeoHash > 0) {
@@ -49,10 +67,20 @@ public class Base32 {
         return base32GeoHash.toString();
     }
 
+    /**
+     * Encodes Binary geohash to Base32
+     * @param binaryGeoHash binary representation of geohash
+     * @return Base32 representation of geohash
+     */
     public static String encode(String binaryGeoHash) {
         return encode(Long.valueOf(binaryGeoHash, 2));
     }
 
+    /**
+     * Decodes base32 geohash to decimal
+     * @param geoHash Base32 representation of geohash
+     * @return Decimal representation of geohash
+     */
     public static Long decode(String geoHash) {
         long decimalGeoHash = 0;
         for (char ch : geoHash.toCharArray()) {
@@ -63,6 +91,10 @@ public class Base32 {
         return decimalGeoHash;
     }
 
+    /**
+     * @param ch character to get index of
+     * @return Index / Integer mapping of character
+     */
     public static int getCharNumber(char ch) {
         if (isBase32Char(ch)) return charToNumberMap.get(ch);
         else throw new IllegalArgumentException("Not a base32 character: " + ch);
