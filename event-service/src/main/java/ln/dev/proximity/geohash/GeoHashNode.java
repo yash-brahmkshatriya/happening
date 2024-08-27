@@ -8,9 +8,6 @@ import java.util.stream.Collectors;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 
-@Data
-@Builder
-@AllArgsConstructor
 public class GeoHashNode<D> {
     @AllArgsConstructor
     private static class GeoHashElement<D> {
@@ -21,15 +18,18 @@ public class GeoHashNode<D> {
     @Value("${proximity.geohash.node.capacity:1000}")
     private int MAX_NODE_CAPACITY;
 
+    @Getter(AccessLevel.PUBLIC)
     private char value;
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private List<GeoHashElement<D>> elements;
 
+    @Getter(AccessLevel.PUBLIC)
     @Setter(AccessLevel.NONE)
     private List<GeoHashNode<D>> children;
 
+    @Getter(AccessLevel.PUBLIC)
     private final int level;
 
     private final boolean isLeaf;

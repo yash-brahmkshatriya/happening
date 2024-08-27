@@ -34,9 +34,17 @@ class GeoHashNodeTest {
 
     @Test
     void split() {
-    }
+        GeoHashNode<Integer> geoHashNode = new GeoHashNode<>('$', 0);
+        ReflectionTestUtils.setField(geoHashNode, "MAX_NODE_CAPACITY", 5);
+        geoHashNode.add(5, "0");
+        geoHashNode.add(10, "01");
+        geoHashNode.add(10, "02");
+        geoHashNode.add(10, "01");
+        geoHashNode.add(5, "0b");
+        geoHashNode.add(5, "03");
 
-    @Test
-    void getDescendantElements() {
+        assertEquals(1, geoHashNode.getElements().size());
+        assertEquals(4, geoHashNode.getChildren().size());
+        assertEquals(6, geoHashNode.getDescendantElements().size());
     }
 }
