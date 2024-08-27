@@ -22,10 +22,10 @@ public class EventSubscription extends Subscription<Event, EventStreamFilters> {
 
     public EventSubscription(String subscriptionId, Date timestamp, EventStreamFilters subscriptionRequestFilters) {
         super(subscriptionId, timestamp, Optional.empty(), Optional.of(subscriptionRequestFilters));
-        this.updateRequestDate(subscriptionRequestFilters);
+        this.updateRequestData(subscriptionRequestFilters);
     }
 
-    public void updateRequestDate(EventStreamFilters eventStreamFilters) {
+    public void updateRequestData(EventStreamFilters eventStreamFilters) {
         this.latLonCoordinate =
                 new LatLonCoordinate(eventStreamFilters.getProximityFilter().getLocation());
         super.updateRequestData(eventStreamFilters);
